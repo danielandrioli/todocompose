@@ -1,12 +1,14 @@
 package com.dboy.todocompose.ui.presentation.view_model
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.dboy.todocompose.UnsuccessfulRequestException
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.data.repository.FakeToDoRepository
 import com.dboy.todocompose.data.repository.ToDoRepository
 import com.dboy.todocompose.ui.presentation.DispatcherProvider
 import com.dboy.todocompose.ui.presentation.FakeDispatchers
+import com.dboy.todocompose.utils.RequestState
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -46,7 +48,12 @@ class SharedViewModelTest {
             viewModel.upSertTask(taskExample)
             viewModel.getAllTasks()
 
-            assertThat(viewModel.taskList.value.first()).isEqualTo(taskExample)
+            val taskRequest = viewModel.taskList.value
+            if (taskRequest is RequestState.Success) {
+                assertThat(taskRequest.data.first()).isEqualTo(taskExample)
+            } else {
+                throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
+            }
         }
     }
 
@@ -57,9 +64,15 @@ class SharedViewModelTest {
             viewModel.upSertTask(taskExample.copy(title = "Another one", id = 1))
             viewModel.getAllTasks()
 
-            assertThat(viewModel.taskList.value).isNotEmpty()
-            viewModel.deleteAllTasks()
-            assertThat(viewModel.taskList.value).isEmpty()
+
+            val taskRequest = viewModel.taskList.value
+            if (taskRequest is RequestState.Success) {
+                assertThat(taskRequest.data).isNotEmpty()
+                viewModel.deleteAllTasks()
+                assertThat(taskRequest.data).isEmpty()
+            } else {
+                throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
+            }
         }
     }
 
@@ -71,7 +84,12 @@ class SharedViewModelTest {
             viewModel.upSertTask(newTask)
             viewModel.getAllTasks()
 
-            assertThat(viewModel.taskList.value.first()).isEqualTo(newTask)
+            val taskRequest = viewModel.taskList.value
+            if (taskRequest is RequestState.Success) {
+                assertThat(taskRequest.data.first()).isEqualTo(newTask)
+            } else {
+                throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
+            }
         }
     }
 }

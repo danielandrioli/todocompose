@@ -38,5 +38,5 @@ interface ToDoDao {
     fun sortByDateStartingFromFirst() : Flow<List<ToDoTask>>
 
     @Query("SELECT * FROM todo_table ORDER BY timeStamp DESC")
-    fun sortByDateStartingFromLatest() : Flow<List<ToDoTask>>
+    fun sortByDateStartingFromLatest() : Flow<List<ToDoTask>>  //NEM PRECISA DESSES DOIS MÉTODOS. O ITEM JÁ É SALVO NO BANCO DE DADOS POR ORDEM DE CRIACAO.
 }
