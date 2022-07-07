@@ -11,15 +11,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.ui.theme.LARGE_PADDING
 import com.dboy.todocompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.dboy.todocompose.ui.theme.Typography
 
 @Composable
-fun PriorityItem(priority: Priority) {
+fun PriorityItem(priority: Priority, modifier: Modifier = Modifier) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Canvas(modifier = Modifier.size(PRIORITY_INDICATOR_SIZE)) {

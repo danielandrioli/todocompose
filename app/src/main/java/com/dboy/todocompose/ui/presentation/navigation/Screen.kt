@@ -1,7 +1,7 @@
 package com.dboy.todocompose.ui.presentation.navigation
 
 import androidx.navigation.NavHostController
-import com.dboy.todocompose.utils.Actions
+import com.dboy.todocompose.utils.Action
 
 const val LIST_SCREEN_BASE_ROUTE = "list_screen"
 const val TASK_SCREEN_BASE_ROUTE = "task_screen"
@@ -10,7 +10,7 @@ const val TASK_ARGUMENT_KEY = "taskId"
 
 sealed class Screen(val route: String) {
     object List : Screen(route = "$LIST_SCREEN_BASE_ROUTE/{$LIST_ARGUMENT_KEY}") {
-        fun goToListScreen(navController: NavHostController, action: Actions) { //ARRUMAR, PROVAVELMENTE
+        fun goToListScreen(navController: NavHostController, action: Action) { //ARRUMAR, PROVAVELMENTE
             navController.navigate(route = "$LIST_SCREEN_BASE_ROUTE/${action.name}") {
                 popUpTo(route) {
                     inclusive = true

@@ -27,7 +27,7 @@ fun ListContent(
                 }
             }
         }
-        is RequestState.Loading -> ""
+        is RequestState.Loading -> "" //CRIAR AQUI UMA TELA DE LOADING
         is RequestState.Error -> ErrorContent()
         is RequestState.Idle -> ""
     }

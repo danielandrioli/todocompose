@@ -130,11 +130,11 @@ fun DeleteAllAction(
             }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(id = R.string.icon_delete_list)
+                    contentDescription = stringResource(id = R.string.icon_delete)
                 )
                 Spacer(modifier = Modifier.width(LARGE_PADDING))
                 Text(
-                    text = stringResource(id = R.string.icon_delete_list),
+                    text = stringResource(id = R.string.icon_delete),
                     style = Typography.subtitle1
                 )
             }

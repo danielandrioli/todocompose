@@ -2,15 +2,19 @@
     <string name="app_name">To Do Compose</string>
     <string name="fab_add_button">Add new task</string>
     <string name="default_bar_title">Tasks</string>
-    <string name="icon_search">Search</string>
-    <string name="icon_filter_list">Sort list</string>
-    <string name="icon_delete_list">Delete all tasks</string>
-    <string name="icon_dropdown">More options</string>
     <string name="search_placeholder">Search for a task</string>
     <string name="search_close">Close search</string>
-    <string name="neutral_face_icon">Neutral face</string>
-    <string name="sad_face_icon">Sad face</string>
     <string name="empty_list">There\'s nothing here. </string>
     <string name="error_message">An error occurred. </string>
-
+    <string name="new_task">New task</string>
+    <!--Icons-->
+    <string name="icon_navigate_back">Go back</string>
+    <string name="icon_check">Create or update task</string>
+    <string name="icon_search">Search</string>
+    <string name="icon_filter_list">Sort list</string>
+    <string name="icon_delete">Delete</string>
+    <string name="icon_edit">Edit</string>
+    <string name="icon_dropdown">More options</string>
+    <string name="neutral_face_icon">Neutral face</string>
+    <string name="sad_face_icon">Sad face</string>
 </resources>

@@ -9,8 +9,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -35,8 +39,13 @@ fun SearchAppbar(
         elevation = AppBarDefaults.TopAppBarElevation,
         color = MaterialTheme.colors.topAppBarBackgroundColor
     ) {
+        val focusRequester = remember { FocusRequester() }
         TextField(
-            modifier = Modifier.fillMaxWidth(), value = text, onValueChange = onTextChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+            value = text,
+            onValueChange = onTextChange,
             placeholder = {
                 Text(
                     modifier = Modifier.alpha(0.5f),
@@ -46,7 +55,8 @@ fun SearchAppbar(
             textStyle = TextStyle(
                 color = MaterialTheme.colors.topAppBarContentColor,
                 fontSize = MaterialTheme.typography.subtitle1.fontSize
-            ), singleLine = true,
+            ),
+            singleLine = true,
             leadingIcon = {
                 Icon(
                     modifier = Modifier.alpha(0.5f),
@@ -75,9 +85,11 @@ fun SearchAppbar(
                 unfocusedIndicatorColor = Color.Transparent,
                 backgroundColor = Color.Transparent
             )
-
         )
-
+        LaunchedEffect(true) {
+            focusRequester.requestFocus()
+            //É necessário chamar no LaunchedEffect para evitar múltiplas requisições de foco
+        }
     }
 }
 

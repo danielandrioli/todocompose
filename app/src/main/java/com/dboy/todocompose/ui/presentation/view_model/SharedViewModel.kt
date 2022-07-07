@@ -26,6 +26,9 @@ class SharedViewModel @Inject constructor(
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
+    private val _task = MutableStateFlow<RequestState<ToDoTask>>(RequestState.Idle)
+    val task: StateFlow<RequestState<ToDoTask>> = _task
+    val editMode = MutableStateFlow<Boolean>(false)
 
     fun getAllTasks() {
         _taskList.value = RequestState.Loading
@@ -58,5 +61,18 @@ class SharedViewModel @Inject constructor(
                 _taskList.value = RequestState.Success(it)
             }
         }
+    }
+
+    fun getSingleTask(id: Int){
+        _task.value = RequestState.Loading
+        viewModelScope.launch(dispatcher.default) {
+            repository.getSingleTask(id).collect() {
+                _task.value = RequestState.Success(it)
+            }
+        }
+    }
+
+    fun cleanTask(){
+        _task.value = RequestState.Idle
     }
 }

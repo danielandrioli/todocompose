@@ -33,7 +33,7 @@ fun SetupNavHost(
         ) {
             val taskArgument = it.arguments?.getInt(TASK_ARGUMENT_KEY)
             taskArgument?.let { taskId ->
-                TaskScreen(navController = navController, taskId = taskId)
+                TaskScreen(navController = navController, taskId = taskId, viewModel)
             }
         }
     }
