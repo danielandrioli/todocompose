@@ -13,7 +13,7 @@ import com.dboy.todocompose.utils.RequestState
 fun TaskAppBar(
     taskId: Int,
     editMode: Boolean,
-    currentTask: RequestState<ToDoTask>,
+    taskTitle: String,
     onActionClick: (Action) -> Unit
 ) {
     if (taskId == -1) {
@@ -22,20 +22,16 @@ fun TaskAppBar(
             onActionClick = onActionClick
         )
     } else {
-        when (currentTask) {
-            is RequestState.Success ->
-                if (!editMode) {
-                    DetailsAppBar(
-                        taskName = currentTask.data.title,
-                        onActionClick = onActionClick
-                    )
-                } else {
-                    UpsertTaskAppBar(
-                        taskName = currentTask.data.title,
-                        onActionClick = onActionClick
-                    )
-                }
-            else -> {}
+        if (!editMode) {
+            DetailsAppBar(
+                taskName = taskTitle,
+                onActionClick = onActionClick
+            )
+        } else {
+            UpsertTaskAppBar(
+                taskName = taskTitle,
+                onActionClick = onActionClick
+            )
         }
     }
 }

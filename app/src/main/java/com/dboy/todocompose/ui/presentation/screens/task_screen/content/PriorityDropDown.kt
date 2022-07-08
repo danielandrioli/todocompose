@@ -43,14 +43,14 @@ fun PriorityDropDown(
             .height(PRIORITY_DROP_DOWN_HEIGHT)
             .clickable { expanded = true }
             .border(
-                shape = Shapes.medium,
+                shape = Shapes.small,
                 width = 1.dp,
                 color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
             )
             .padding(start = SMALL_PADDING),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        PriorityItem(priority = priority, Modifier.weight(8f))
+        PriorityItem(priority = priority, Modifier.weight(8f), stringResource(R.string.priority))
         IconButton(
             onClick = {
                 expanded = !expanded
@@ -65,9 +65,13 @@ fun PriorityDropDown(
                 contentDescription = stringResource(R.string.icon_dropdown)
             )
         }
-        DropdownMenu(modifier = Modifier.fillMaxWidth(), expanded = expanded, onDismissRequest = {
-            expanded = false
-        }) {
+        DropdownMenu(
+            modifier = Modifier
+                .fillMaxWidth(0.91f),
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            }) {
             DropdownMenuItem(onClick = {
                 expanded = false
                 onPrioritySelected(Priority.LOW)

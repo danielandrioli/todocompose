@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.data.repository.ToDoRepository
 import com.dboy.todocompose.ui.presentation.DispatcherProvider
@@ -26,9 +27,15 @@ class SharedViewModel @Inject constructor(
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
-    private val _task = MutableStateFlow<RequestState<ToDoTask>>(RequestState.Idle)
-    val task: StateFlow<RequestState<ToDoTask>> = _task
+    private val _task = MutableStateFlow<ToDoTask?>(null)
+    val task: StateFlow<ToDoTask?> = _task
     val editMode = MutableStateFlow<Boolean>(false)
+
+    val upsertTaskTitle = MutableStateFlow<String>("")
+    val upsertTaskDescription = MutableStateFlow<String>("")
+    val upsertTaskTimeStamp = MutableStateFlow<Long>(0L)
+    val upsertTaskPriority = MutableStateFlow<Priority>(Priority.LOW)
+    val upsertTaskId = MutableStateFlow<Int>(0)
 
     fun getAllTasks() {
         _taskList.value = RequestState.Loading
@@ -64,15 +71,22 @@ class SharedViewModel @Inject constructor(
     }
 
     fun getSingleTask(id: Int){
-        _task.value = RequestState.Loading
         viewModelScope.launch(dispatcher.default) {
             repository.getSingleTask(id).collect() {
-                _task.value = RequestState.Success(it)
+                upsertTaskTitle.value = it.title
+                upsertTaskDescription.value = it.description
+                upsertTaskPriority.value = it.priority
+                upsertTaskTimeStamp.value = it.timeStamp
+                upsertTaskId.value = it.id
             }
         }
     }
 
-    fun cleanTask(){
-        _task.value = RequestState.Idle
+    fun cleanCurrentTask() {
+        upsertTaskTitle.value = ""
+        upsertTaskDescription.value = ""
+        upsertTaskPriority.value = Priority.LOW
+        upsertTaskTimeStamp.value = 0L
+        upsertTaskId.value = 0
     }
 }

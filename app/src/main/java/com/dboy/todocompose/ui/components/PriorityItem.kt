@@ -17,7 +17,10 @@ import com.dboy.todocompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.dboy.todocompose.ui.theme.Typography
 
 @Composable
-fun PriorityItem(priority: Priority, modifier: Modifier = Modifier) {
+fun PriorityItem(
+    priority: Priority, modifier: Modifier = Modifier,
+    priorityText: String = ""
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -27,7 +30,7 @@ fun PriorityItem(priority: Priority, modifier: Modifier = Modifier) {
         }
         Spacer(modifier = Modifier.width(LARGE_PADDING))
         Text(
-            text = priority.name,
+            text = priority.name + " " + priorityText,
             style = Typography.subtitle1,
             color = MaterialTheme.colors.onSurface
         )
@@ -36,6 +39,6 @@ fun PriorityItem(priority: Priority, modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun PreviewPriorityItem(){
+fun PreviewPriorityItem() {
     PriorityItem(priority = Priority.HIGH)
 }
