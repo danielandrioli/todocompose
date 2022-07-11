@@ -4,6 +4,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.dboy.todocompose.ui.theme.topAppBarBackgroundColor
@@ -13,6 +14,8 @@ import com.dboy.todocompose.utils.Action
 @Composable
 fun UpsertTaskAppBar(
     taskName: String,
+    editMode: Boolean,
+    newTask: Boolean,
     onActionClick: (Action) -> Unit
 ) {
     TopAppBar(
@@ -22,12 +25,15 @@ fun UpsertTaskAppBar(
         title = {
             Text(
                 text = taskName,
-                color = MaterialTheme.colors.topAppBarContentColor
+                color = MaterialTheme.colors.topAppBarContentColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
-            UpsertAction(onAddClick = onActionClick)
+            if (editMode) UpsertAction(onAddClick = onActionClick)
+            if (!newTask) DeleteAction(onDeleteClick = onActionClick)
         }
     )
 }
@@ -37,5 +43,5 @@ fun UpsertTaskAppBar(
 @Preview
 fun PreviewNewTaskAppbar() {
     val navController = rememberNavController()
-    UpsertTaskAppBar("") {}
+    UpsertTaskAppBar("", true, false) {}
 }

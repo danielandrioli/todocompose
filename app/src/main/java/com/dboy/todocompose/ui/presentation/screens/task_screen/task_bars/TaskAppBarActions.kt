@@ -61,19 +61,3 @@ fun DeleteAction(
         )
     }
 }
-
-@Composable
-fun EditAction(
-    onEditClick: (Action) -> Unit
-) {
-    IconButton(onClick = {
-        onEditClick(Action.EDIT)
-    }
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Edit,
-            contentDescription = stringResource(id = R.string.icon_edit),
-            tint = MaterialTheme.colors.topAppBarContentColor
-        )
-    }
-}

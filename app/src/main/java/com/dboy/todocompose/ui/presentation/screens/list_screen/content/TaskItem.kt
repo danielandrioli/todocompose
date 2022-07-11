@@ -44,7 +44,7 @@ fun TaskItem(
                 Text(
                     text = toDoTask.title,
                     color = MaterialTheme.colors.taskItemTitleColor,
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.h6,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

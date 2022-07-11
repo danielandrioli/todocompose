@@ -1,15 +1,26 @@
 package com.dboy.todocompose.ui.presentation.screens.task_screen
 
-import androidx.activity.compose.BackHandler
+import android.widget.Toast
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
+import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.screens.task_screen.content.UpsertTaskContent
 import com.dboy.todocompose.ui.presentation.screens.task_screen.task_bars.TaskAppBar
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.utils.Action
+import com.dboy.todocompose.utils.Constants.TASK_TITLE_MAX_CHARS
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TaskScreen(
     navController: NavHostController,
@@ -27,7 +38,11 @@ fun TaskScreen(
     val upsertTaskDescription by viewModel.upsertTaskDescription.collectAsState()
     val upsertTaskPriority: Priority by viewModel.upsertTaskPriority.collectAsState()
     val upsertTaskTimeStamp: Long by viewModel.upsertTaskTimeStamp.collectAsState()
-    val upsertTaskId: Int by viewModel.upsertTaskId.collectAsState()
+    val upsertTaskId: Int = if (taskId == -1) 0 else taskId
+    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val toastString = stringResource(id = R.string.task_saved)
+
 
     Scaffold(topBar = {
         TaskAppBar(
@@ -37,39 +52,49 @@ fun TaskScreen(
                 Action.NO_ACTION -> {
                     navController.popBackStack()
                 }
-                Action.EDIT -> viewModel.editMode.value = true
 //                Action.DELETE -> viewModel DELETE SINGLE TASK
                 Action.UPSERT -> {
-                    //pegar title, description, priority, id, e timeStamp, criar um ToDoTask e salvar
+                    val task = ToDoTask(
+                        title = upsertTaskTitle,
+                        description = upsertTaskDescription,
+                        priority = upsertTaskPriority,
+                        timeStamp = 999, //SEMPRE UMA NOVA TIME STAMP. EDITAR AQUI
+                        id = upsertTaskId
+                    )
+                    viewModel.upSertTask(task)
+                    viewModel.editMode.value = false
+                    keyboardController?.hide()
+                    Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show()
+                    if (taskId == -1) navController.popBackStack()
                 }
             }
         }
     }) {
-        if (taskId != -1 && !editMode) {
-            //details content
-        } else { //criar ToDoTask ou editar uma...
+        //criar ToDoTask ou editar uma...
             UpsertTaskContent(
                 taskTitle = upsertTaskTitle,
                 taskDescription = upsertTaskDescription,
                 taskPriority = upsertTaskPriority,
                 onTitleChange = {
-                    viewModel.upsertTaskTitle.value = it
+                    if (it.length <= TASK_TITLE_MAX_CHARS) {
+                        viewModel.upsertTaskTitle.value = it
+                    }
                 },
                 onDescriptionChange = {
                     viewModel.upsertTaskDescription.value = it
                 },
                 onPriorityChange = {
                     viewModel.upsertTaskPriority.value = it
+                    viewModel.editMode.value = true
+                },
+                onFocusChangeToEditMode = {
+                    viewModel.editMode.value = true
+                },
+                onBackButtonPressed = {
+                    navController.popBackStack()
                 }
             )
-        }
     }
 
-    BackHandler {
-        if (editMode) {
-            viewModel.editMode.value = false
-        } else {
-            navController.popBackStack()
-        }
-    }
+
 }

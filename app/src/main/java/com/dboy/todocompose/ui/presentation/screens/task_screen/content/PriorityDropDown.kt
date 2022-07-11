@@ -95,11 +95,6 @@ fun PriorityDropDown(
 }
 
 @Composable
-fun DismissMenu() {
-
-}
-
-@Composable
 @Preview
 fun PreviewPriorityDropDown() {
     ToDoComposeTheme {

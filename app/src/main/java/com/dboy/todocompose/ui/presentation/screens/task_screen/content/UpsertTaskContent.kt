@@ -1,17 +1,22 @@
 package com.dboy.todocompose.ui.presentation.screens.task_screen.content
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.ui.theme.LARGE_PADDING
+import com.dboy.todocompose.utils.clearFocusOnKeyboardDismiss
 
 @Composable
 fun UpsertTaskContent(
@@ -21,7 +26,15 @@ fun UpsertTaskContent(
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onPriorityChange: (Priority) -> Unit,
+    onFocusChangeToEditMode: () -> Unit,
+    onBackButtonPressed: () -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused = interactionSource.collectIsFocusedAsState() //há vários estados a serem coletados, como click, drag...
+
+    if (isFocused.value) {
+        onFocusChangeToEditMode()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,7 +42,8 @@ fun UpsertTaskContent(
             .padding(LARGE_PADDING)
     ) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clearFocusOnKeyboardDismiss(),
+            interactionSource = interactionSource,
             value = taskTitle,
             onValueChange = onTitleChange,
             label = {
@@ -43,7 +57,9 @@ fun UpsertTaskContent(
         PriorityDropDown(priority = taskPriority, onPrioritySelected = onPriorityChange)
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize().clearFocusOnKeyboardDismiss(),
+            interactionSource = interactionSource,
             value = taskDescription,
             onValueChange = onDescriptionChange,
             label = {
@@ -51,5 +67,9 @@ fun UpsertTaskContent(
             },
             textStyle = MaterialTheme.typography.body1,
         )
+
+        BackHandler {
+            onBackButtonPressed()
+        }
     }
 }
