@@ -1,5 +1,6 @@
 package com.dboy.todocompose.ui.presentation.screens.task_screen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import com.dboy.todocompose.ui.presentation.screens.task_screen.task_bars.TaskAp
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.utils.Action
 import com.dboy.todocompose.utils.Constants.TASK_TITLE_MAX_CHARS
+import com.dboy.todocompose.utils.DateFormater
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -37,7 +39,6 @@ fun TaskScreen(
     val upsertTaskTitle by viewModel.upsertTaskTitle.collectAsState()
     val upsertTaskDescription by viewModel.upsertTaskDescription.collectAsState()
     val upsertTaskPriority: Priority by viewModel.upsertTaskPriority.collectAsState()
-    val upsertTaskTimeStamp: Long by viewModel.upsertTaskTimeStamp.collectAsState()
     val upsertTaskId: Int = if (taskId == -1) 0 else taskId
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -58,12 +59,13 @@ fun TaskScreen(
                         title = upsertTaskTitle,
                         description = upsertTaskDescription,
                         priority = upsertTaskPriority,
-                        timeStamp = 999, //SEMPRE UMA NOVA TIME STAMP. EDITAR AQUI
+                        timeStamp = DateFormater.getTimeStampAsLong(),
                         id = upsertTaskId
                     )
                     viewModel.upSertTask(task)
                     viewModel.editMode.value = false
                     keyboardController?.hide()
+
                     Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show()
                     if (taskId == -1) navController.popBackStack()
                 }

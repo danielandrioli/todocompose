@@ -7,17 +7,21 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.navigation.Screen
 import com.dboy.todocompose.ui.theme.*
+import com.dboy.todocompose.utils.DateFormater
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -39,7 +43,8 @@ fun TaskItem(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = toDoTask.title,
@@ -63,6 +68,17 @@ fun TaskItem(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                Text(
+                    modifier = Modifier.alpha(0.5f),
+                    text = DateFormater.getTimeStampAsString(toDoTask.timeStamp),
+                    color = MaterialTheme.colors.taskItemTextColor,
+                    style = MaterialTheme.typography.subtitle2.copy(fontSize = 12.sp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+            }
         }
     }
 }
