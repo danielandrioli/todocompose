@@ -13,7 +13,6 @@ import com.dboy.todocompose.utils.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,13 +28,11 @@ class SharedViewModel @Inject constructor(
     val searchTextState: MutableState<String> = mutableStateOf("")
     private val _task = MutableStateFlow<ToDoTask?>(null)
     val task: StateFlow<ToDoTask?> = _task
-    val editMode = MutableStateFlow<Boolean>(false)
+    val editMode = mutableStateOf(false)
 
-    val upsertTaskTitle = MutableStateFlow<String>("")
-    val upsertTaskDescription = MutableStateFlow<String>("")
-    val upsertTaskTimeStamp = MutableStateFlow<Long>(0L)
-    val upsertTaskPriority = MutableStateFlow<Priority>(Priority.LOW)
-    val upsertTaskId = MutableStateFlow<Int>(0)
+    val upsertTaskTitle = mutableStateOf("")
+    val upsertTaskDescription = mutableStateOf("")
+    val upsertTaskPriority = mutableStateOf(Priority.LOW)
 
     fun getAllTasks() {
         _taskList.value = RequestState.Loading
@@ -62,6 +59,12 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+    fun deleteTask(id: Int) {
+        viewModelScope.launch(dispatcher.default) {
+//            repository.deleteTask()
+        }
+    }
+
     fun searchDatabase(query: String) {
         viewModelScope.launch(dispatcher.default) {
             repository.searchDatabase(query).collect() {
@@ -72,21 +75,23 @@ class SharedViewModel @Inject constructor(
 
     fun getSingleTask(id: Int){
         viewModelScope.launch(dispatcher.default) {
-            repository.getSingleTask(id).collect() {
-                upsertTaskTitle.value = it.title
-                upsertTaskDescription.value = it.description
-                upsertTaskPriority.value = it.priority
-                upsertTaskTimeStamp.value = it.timeStamp
-                upsertTaskId.value = it.id
+            if (id <= 0) _task.value = null else {
+                repository.getSingleTask(id).collect() {
+                    _task.value = it
+                }
             }
         }
     }
 
-    fun cleanCurrentTask() {
+    fun updateTextFields(task: ToDoTask) {
+        upsertTaskTitle.value = task.title
+        upsertTaskDescription.value = task.description
+        upsertTaskPriority.value = task.priority
+    }
+
+    fun cleanCurrentTextFields() {
         upsertTaskTitle.value = ""
         upsertTaskDescription.value = ""
         upsertTaskPriority.value = Priority.LOW
-        upsertTaskTimeStamp.value = 0L
-        upsertTaskId.value = 0
     }
 }

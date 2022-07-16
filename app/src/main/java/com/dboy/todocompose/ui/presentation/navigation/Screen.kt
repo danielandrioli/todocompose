@@ -9,9 +9,9 @@ const val LIST_ARGUMENT_KEY = "action"
 const val TASK_ARGUMENT_KEY = "taskId"
 
 sealed class Screen(val route: String) {
-    object List : Screen(route = "$LIST_SCREEN_BASE_ROUTE/{$LIST_ARGUMENT_KEY}") {
-        fun goToListScreen(navController: NavHostController, action: Action) { //ARRUMAR, PROVAVELMENTE
-            navController.navigate(route = "$LIST_SCREEN_BASE_ROUTE/${action.name}") {
+    object List : Screen(route = LIST_SCREEN_BASE_ROUTE) {
+        fun goToListScreen(navController: NavHostController) { //ARRUMAR, PROVAVELMENTE
+            navController.navigate(route = LIST_SCREEN_BASE_ROUTE) {
                 popUpTo(route) {
                     inclusive = true
                 }

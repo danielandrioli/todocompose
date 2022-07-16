@@ -1,6 +1,6 @@
 package com.dboy.todocompose.ui.presentation.screens.task_screen.content
 
-import androidx.activity.compose.BackHandler
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,14 +27,17 @@ fun UpsertTaskContent(
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onPriorityChange: (Priority) -> Unit,
-    onFocusChangeToEditMode: () -> Unit,
-    onBackButtonPressed: () -> Unit
+    onFocusChangeToEditMode: (Boolean) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val isFocused = interactionSource.collectIsFocusedAsState() //há vários estados a serem coletados, como click, drag...
+    val isFocused by interactionSource.collectIsFocusedAsState() //há vários estados a serem coletados, como click, drag...
 
-    if (isFocused.value) {
-        onFocusChangeToEditMode()
+    if (isFocused) {
+        onFocusChangeToEditMode(true)
+//        Log.i("TaskScreen", "Focused")
+    } else {
+        onFocusChangeToEditMode(false)
+//        Log.i("TaskScreen", "Not focused")
     }
     Column(
         modifier = Modifier
@@ -67,9 +71,5 @@ fun UpsertTaskContent(
             },
             textStyle = MaterialTheme.typography.body1,
         )
-
-        BackHandler {
-            onBackButtonPressed()
-        }
     }
 }

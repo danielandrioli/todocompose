@@ -1,6 +1,9 @@
 package com.dboy.todocompose.ui.presentation.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,9 +21,6 @@ fun SetupNavHost(
     NavHost(navController = navController, startDestination = Screen.List.route) {
         composable(
             route = Screen.List.route,
-            arguments = listOf(navArgument(LIST_ARGUMENT_KEY) {
-                type = NavType.StringType
-            })
         ) {
             ListScreen(navController = navController, viewModel)
         }
@@ -32,7 +32,19 @@ fun SetupNavHost(
             })
         ) {
             val taskArgument = it.arguments?.getInt(TASK_ARGUMENT_KEY)
+            Log.i("TaskNavHost", "taskArgument: $taskArgument")
             taskArgument?.let { taskId ->
+//                viewModel.cleanCurrentTextFields()
+                viewModel.getSingleTask(taskId)
+                val taskState = viewModel.task.collectAsState()
+                LaunchedEffect(key1 = taskState) {
+                    Log.i("TaskScreen", "Launched effect - id: $taskId")
+                    viewModel.cleanCurrentTextFields()
+                    taskState.value?.let { task ->
+                        viewModel.updateTextFields(task)
+                    }
+                    viewModel.editMode.value = false
+                }
                 TaskScreen(navController = navController, taskId = taskId, viewModel)
             }
         }
