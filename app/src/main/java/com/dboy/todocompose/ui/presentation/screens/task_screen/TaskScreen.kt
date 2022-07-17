@@ -4,22 +4,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
-import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.screens.task_screen.content.UpsertTaskContent
 import com.dboy.todocompose.ui.presentation.screens.task_screen.task_bars.TaskAppBar
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.utils.Action
 import com.dboy.todocompose.utils.Constants.TASK_TITLE_MAX_CHARS
-import com.dboy.todocompose.utils.DateFormater
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -29,21 +27,16 @@ fun TaskScreen(
     viewModel: SharedViewModel
 ) {
     Log.i("TaskScreen", "ENTERING task screen")
-//    LaunchedEffect(key1 = true) {
-//        Log.i("TaskScreen", "Launched effect - id: $taskId")
-//        if (taskId != -1) viewModel.getSingleTask(taskId)
-//        viewModel.editMode.value = false
-//    }
-
-//    val currentTask by viewModel.task.collectAsState()
     val editMode by viewModel.editMode
     val upsertTaskTitle by viewModel.upsertTaskTitle
     val upsertTaskDescription by viewModel.upsertTaskDescription
     val upsertTaskPriority: Priority by viewModel.upsertTaskPriority
-    val upsertTaskId: Int = if (taskId == -1) 0 else taskId
+    val upsertTaskId: Int by viewModel.upsertTaskId
+
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val toastString = stringResource(id = R.string.task_saved)
+    val toastStringTaskSaved = stringResource(id = R.string.task_saved)
+    val toastStringTaskDeleted = stringResource(id = R.string.task_deleted)
 
     Log.i("TaskScreen", "Edit Mode: $editMode | task title: $upsertTaskTitle | task id: $taskId")
     Scaffold(topBar = {
@@ -51,39 +44,40 @@ fun TaskScreen(
             taskId = taskId, editMode = editMode, taskTitle = upsertTaskTitle
         ) { action ->
             when (action) {
-                Action.NO_ACTION -> {
-                    if (taskId != -1) {
-                        val task = ToDoTask(
-                            title = upsertTaskTitle,
-                            description = upsertTaskDescription,
-                            priority = upsertTaskPriority,
-                            timeStamp = DateFormater.getTimeStampAsLong(),
-                            id = upsertTaskId
-                        )
-                        viewModel.upSertTask(task)
+                Action.NO_ACTION -> {//não quero salvar se id for -1
+                    if (taskId != -1 && upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+                        viewModel.deleteTask(upsertTaskId)
+                        Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
+                    } else if (taskId != -1) {
+                        val currentTask = viewModel.getCurrentTask()
+                        viewModel.upSertTask(currentTask)
                     }
                     navController.popBackStack()
-//                    viewModel.cleanCurrentTask()
                 }
                 Action.DELETE -> {
-                    // TODO:
+                    viewModel.deleteTask(upsertTaskId)
+                    Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
                 }
                 Action.UPSERT -> {
-                    val task = ToDoTask(
-                        title = upsertTaskTitle,
-                        description = upsertTaskDescription,
-                        priority = upsertTaskPriority,
-                        timeStamp = DateFormater.getTimeStampAsLong(),
-                        id = upsertTaskId
-                    )
-                    viewModel.upSertTask(task)
-//                    viewModel.editMode.value = false
                     keyboardController?.hide()
-                    Log.i("TaskScreen", "SAVING. TaskId: $taskId - title: $upsertTaskTitle")
-                    Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show()
                     if (taskId == -1) {
+                        if (upsertTaskTitle.isNotEmpty() || upsertTaskDescription.isNotEmpty()) {
+                            val currentTask = viewModel.getCurrentTask()
+                            viewModel.upSertTask(currentTask)
+                            Toast.makeText(context, toastStringTaskSaved, Toast.LENGTH_SHORT).show()
+                        }
                         navController.popBackStack()
-//                        viewModel.cleanCurrentTask()
+                    } else {
+                        if (upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+                            viewModel.deleteTask(upsertTaskId)
+                            Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
+                        } else {
+                            val currentTask = viewModel.getCurrentTask()
+                            viewModel.upSertTask(currentTask)
+                            Toast.makeText(context, toastStringTaskSaved, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -104,7 +98,6 @@ fun TaskScreen(
             },
             onPriorityChange = {
                 viewModel.upsertTaskPriority.value = it
-//                viewModel.editMode.value = true
             },
             onFocusChangeToEditMode = {
                 viewModel.editMode.value = it
@@ -113,18 +106,13 @@ fun TaskScreen(
     }
 
     BackHandler {
-        if (taskId != -1) {
-            val task = ToDoTask(
-                title = upsertTaskTitle,
-                description = upsertTaskDescription,
-                priority = upsertTaskPriority,
-                timeStamp = DateFormater.getTimeStampAsLong(),
-                id = upsertTaskId
-            )
-            viewModel.upSertTask(task)
+        if (taskId != -1 && upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+            viewModel.deleteTask(upsertTaskId)
+            Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
+        } else if (taskId != -1) {
+            val currentTask = viewModel.getCurrentTask()
+            viewModel.upSertTask(currentTask)
         }
-        Log.i("TaskScreen", "task id: $taskId")
         navController.popBackStack()
-//        viewModel.cleanCurrentTask()
     }
 }

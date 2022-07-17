@@ -29,8 +29,8 @@ class FakeToDoRepository : ToDoRepository {
 //        listOfTasks[task.id] = task
     }
 
-    override suspend fun deleteTask(task: ToDoTask) {
-        listOfTasks.remove(task)
+    override suspend fun deleteTask(taskId: Int) {
+        listOfTasks.removeAt(taskId)
     }
 
     override suspend fun deleteAllTasks() {

@@ -16,8 +16,11 @@ interface ToDoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upSertTask(task: ToDoTask)
 
-    @Delete
-    suspend fun deleteTask(task: ToDoTask)
+//    @Delete
+//    suspend fun deleteTask(task: ToDoTask)
+
+    @Query("DELETE FROM todo_table WHERE id = :id")
+    suspend fun deleteSingleTask(id: Int)
 
     @Query("DELETE FROM todo_table")
     suspend fun deleteAllTasks()

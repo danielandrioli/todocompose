@@ -1,5 +1,6 @@
 package com.dboy.todocompose.ui.presentation.view_model
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.data.repository.ToDoRepository
 import com.dboy.todocompose.ui.presentation.DispatcherProvider
+import com.dboy.todocompose.utils.DateFormater
 import com.dboy.todocompose.utils.RequestState
 import com.dboy.todocompose.utils.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,7 @@ class SharedViewModel @Inject constructor(
     val task: StateFlow<ToDoTask?> = _task
     val editMode = mutableStateOf(false)
 
+    val upsertTaskId = mutableStateOf(0)
     val upsertTaskTitle = mutableStateOf("")
     val upsertTaskDescription = mutableStateOf("")
     val upsertTaskPriority = mutableStateOf(Priority.LOW)
@@ -61,7 +64,11 @@ class SharedViewModel @Inject constructor(
 
     fun deleteTask(id: Int) {
         viewModelScope.launch(dispatcher.default) {
-//            repository.deleteTask()
+            try {
+                repository.deleteTask(id)
+            } catch (e: Exception) {
+                Log.e("ViewModel", "task deletion error: ${e.localizedMessage}")
+            }
         }
     }
 
@@ -73,7 +80,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun getSingleTask(id: Int){
+    fun getSingleTaskFromDb(id: Int){
         viewModelScope.launch(dispatcher.default) {
             if (id <= 0) _task.value = null else {
                 repository.getSingleTask(id).collect() {
@@ -83,15 +90,27 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+    fun getCurrentTask() : ToDoTask {
+        return ToDoTask(
+            title = upsertTaskTitle.value,
+            description = upsertTaskDescription.value,
+            priority = upsertTaskPriority.value,
+            timeStamp = DateFormater.getTimeStampAsLong(),
+            id = upsertTaskId.value
+        )
+    }
+
     fun updateTextFields(task: ToDoTask) {
         upsertTaskTitle.value = task.title
         upsertTaskDescription.value = task.description
         upsertTaskPriority.value = task.priority
+        upsertTaskId.value = task.id
     }
 
     fun cleanCurrentTextFields() {
         upsertTaskTitle.value = ""
         upsertTaskDescription.value = ""
         upsertTaskPriority.value = Priority.LOW
+        upsertTaskId.value = 0
     }
 }

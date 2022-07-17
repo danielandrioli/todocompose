@@ -11,7 +11,7 @@
     <string name="description">Description</string>
     <string name="priority">PRIORITY</string>
     <string name="task_saved">Task saved!</string>
-
+    <string name="task_deleted">Task deleted!</string>
 
     <!--Icons-->
     <string name="icon_navigate_back">Go back</string>

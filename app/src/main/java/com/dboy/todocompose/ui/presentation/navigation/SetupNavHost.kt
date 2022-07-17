@@ -34,10 +34,9 @@ fun SetupNavHost(
             val taskArgument = it.arguments?.getInt(TASK_ARGUMENT_KEY)
             Log.i("TaskNavHost", "taskArgument: $taskArgument")
             taskArgument?.let { taskId ->
-//                viewModel.cleanCurrentTextFields()
-                viewModel.getSingleTask(taskId)
+                viewModel.getSingleTaskFromDb(taskId)
                 val taskState = viewModel.task.collectAsState()
-                LaunchedEffect(key1 = taskState) {
+                LaunchedEffect(key1 = taskState) {//como esse bloco depende do taskState, ele deve ser a key.
                     Log.i("TaskScreen", "Launched effect - id: $taskId")
                     viewModel.cleanCurrentTextFields()
                     taskState.value?.let { task ->
