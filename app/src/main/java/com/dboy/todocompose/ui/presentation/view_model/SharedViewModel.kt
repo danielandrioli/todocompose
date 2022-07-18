@@ -39,7 +39,7 @@ class SharedViewModel @Inject constructor(
 
     fun getAllTasks() {
         _taskList.value = RequestState.Loading
-        viewModelScope.launch(dispatcher.default) {
+        viewModelScope.launch(dispatcher.io) {
             try {
                 repository.getAllTasks().collect {
                     _taskList.value = RequestState.Success(it)
@@ -51,19 +51,19 @@ class SharedViewModel @Inject constructor(
     }
 
     fun upSertTask(task: ToDoTask) {
-        viewModelScope.launch(dispatcher.default) {
+        viewModelScope.launch(dispatcher.io) {
             repository.upSertTask(task)
         }
     }
 
     fun deleteAllTasks() {
-        viewModelScope.launch(dispatcher.default) {
+        viewModelScope.launch(dispatcher.io) {
             repository.deleteAllTasks()
         }
     }
 
     fun deleteTask(id: Int) {
-        viewModelScope.launch(dispatcher.default) {
+        viewModelScope.launch(dispatcher.io) {
             try {
                 repository.deleteTask(id)
             } catch (e: Exception) {
@@ -73,7 +73,7 @@ class SharedViewModel @Inject constructor(
     }
 
     fun searchDatabase(query: String) {
-        viewModelScope.launch(dispatcher.default) {
+        viewModelScope.launch(dispatcher.io) {
             repository.searchDatabase(query).collect() {
                 _taskList.value = RequestState.Success(it)
             }
@@ -81,7 +81,7 @@ class SharedViewModel @Inject constructor(
     }
 
     fun getSingleTaskFromDb(id: Int){
-        viewModelScope.launch(dispatcher.default) {
+        viewModelScope.launch(dispatcher.io) {
             if (id <= 0) _task.value = null else {
                 repository.getSingleTask(id).collect() {
                     _task.value = it

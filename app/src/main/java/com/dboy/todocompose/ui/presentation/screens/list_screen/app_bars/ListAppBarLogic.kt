@@ -8,9 +8,6 @@ import com.dboy.todocompose.utils.SearchAppBarState
 fun ListAppBar(
     viewModel: SharedViewModel
 ) {
-//    val searchAppBarState: SearchAppBarState by viewModel.searchAppBarState
-//    val searchAppTextState: String by viewModel.searchTextState
-    // ou utilizar o remember...
     when (viewModel.searchAppBarState.value) {
         SearchAppBarState.CLOSED -> {
             DefaultAppBar(
@@ -35,10 +32,10 @@ fun ListAppBar(
                     }
                     viewModel.searchAppBarState.value = SearchAppBarState.CLOSED
                 },
-                onSearchClicked = {
-//                    viewModel.searchDatabase(it)
-                }
+                onSearchClicked = { }
             )
         }
     }
+
+
 }

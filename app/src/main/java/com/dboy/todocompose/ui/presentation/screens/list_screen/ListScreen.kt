@@ -1,5 +1,6 @@
 package com.dboy.todocompose.ui.presentation.screens.list_screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -19,6 +20,7 @@ import com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars.ListApp
 import com.dboy.todocompose.ui.presentation.screens.list_screen.content.ListContent
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.utils.SearchAppBarState
 
 @Composable
 fun ListScreen(
@@ -35,6 +37,16 @@ fun ListScreen(
         ListAppBar(viewModel)
     }) {
         ListContent(allTasksState, navController)
+    }
+
+    BackHandler {
+        if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED) {
+            viewModel.searchAppBarState.value = SearchAppBarState.CLOSED
+            if (viewModel.searchTextState.value.isNotEmpty()) viewModel.getAllTasks()
+            viewModel.searchTextState.value = ""
+        } else {
+            navController.popBackStack()
+        }
     }
 }
 
