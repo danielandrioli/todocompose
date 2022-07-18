@@ -4,7 +4,9 @@
     <string name="default_bar_title">Tasks</string>
     <string name="search_placeholder">Search for a task</string>
     <string name="search_close">Close search</string>
-    <string name="empty_list">There\'s nothing here. </string>
+    <string name="no_results_found">No results found. </string>
+    <string name="empty_list">Your to-do list is empty. </string>
+    <string name="empty_list_description">Empty list. </string>
     <string name="error_message">An error occurred. </string>
     <string name="new_task">New task</string>
     <string name="title">Title</string>

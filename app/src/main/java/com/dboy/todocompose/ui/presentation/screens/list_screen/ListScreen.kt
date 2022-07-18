@@ -36,7 +36,7 @@ fun ListScreen(
     }, topBar = {
         ListAppBar(viewModel)
     }) {
-        ListContent(allTasksState, navController)
+        ListContent(allTasksState, navController, viewModel)
     }
 
     BackHandler {

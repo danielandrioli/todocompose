@@ -20,7 +20,11 @@ import com.dboy.todocompose.ui.theme.EMPTY_LIST_ICON_SIZE
 import com.dboy.todocompose.ui.theme.ToDoComposeTheme
 
 @Composable
-fun EmptyContent() {
+fun EmptyContent(
+    emptyContentText: String,
+    contentDescription: String,
+    painterResource: Int
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,13 +35,11 @@ fun EmptyContent() {
         Icon(
             modifier = Modifier.size(EMPTY_LIST_ICON_SIZE),
             tint = MaterialTheme.colors.onSurface,
-            painter = painterResource(id = R.drawable.ic_sentiment_neutral),
-            contentDescription = stringResource(
-                id = R.string.neutral_face_icon
-            )
+            painter = painterResource(id = painterResource),
+            contentDescription = contentDescription
         )
         Text(
-            text = stringResource(id = R.string.empty_list),
+            text = emptyContentText,
             color = MaterialTheme.colors.onSurface,
             fontWeight = FontWeight.Bold,
             fontSize = MaterialTheme.typography.h6.fontSize
@@ -49,7 +51,6 @@ fun EmptyContent() {
 @Composable
 fun PreviewEmptyContent() {
     ToDoComposeTheme {
-        EmptyContent()
-
+//        EmptyContent()
     }
 }
