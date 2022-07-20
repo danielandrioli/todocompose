@@ -14,6 +14,10 @@
     <string name="priority">PRIORITY</string>
     <string name="task_saved">Task saved!</string>
     <string name="task_deleted">Task deleted!</string>
+    <string name="undo_deletion">UNDO</string>
+    <string name="ask_deletion">Delete anotation?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 
     <!--Icons-->
     <string name="icon_navigate_back">Go back</string>

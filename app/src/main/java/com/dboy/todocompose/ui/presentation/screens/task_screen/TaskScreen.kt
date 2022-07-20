@@ -3,23 +3,42 @@ package com.dboy.todocompose.ui.presentation.screens.task_screen
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.ui.presentation.screens.task_screen.content.UpsertTaskContent
 import com.dboy.todocompose.ui.presentation.screens.task_screen.task_bars.TaskAppBar
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
+import com.dboy.todocompose.ui.theme.cancelButton
+import com.dboy.todocompose.ui.theme.deleteButton
 import com.dboy.todocompose.utils.Action
 import com.dboy.todocompose.utils.Constants.TASK_TITLE_MAX_CHARS
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun TaskScreen(
     navController: NavHostController,
@@ -38,81 +57,151 @@ fun TaskScreen(
     val toastStringTaskSaved = stringResource(id = R.string.task_saved)
     val toastStringTaskDeleted = stringResource(id = R.string.task_deleted)
 
-    Log.i("TaskScreen", "Edit Mode: $editMode | task title: $upsertTaskTitle | task id: $taskId")
-    Scaffold(topBar = {
-        TaskAppBar(
-            taskId = taskId, editMode = editMode, taskTitle = upsertTaskTitle
-        ) { action ->
-            when (action) {
-                Action.NO_ACTION -> {//não quero salvar se id for -1
-                    if (taskId != -1 && upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
-                        viewModel.deleteTask(upsertTaskId)
-                        Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
-                    } else if (taskId != -1) {
-                        val currentTask = viewModel.getCurrentTask()
-                        viewModel.upSertTask(currentTask)
+    val modalBottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
+
+    ModalBottomSheetLayout(
+        sheetShape = RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp),
+        sheetState = modalBottomSheetState,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .height(210.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround
+            ) {
+                Text(
+                    text = stringResource(id = R.string.ask_deletion),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.cancelButton),
+                        modifier = Modifier.width(140.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = {
+                            scope.launch {
+                                modalBottomSheetState.hide()
+                            }
+                        }) {
+                        Text(text = stringResource(id = R.string.cancel), fontSize = 18.sp)
                     }
-                    navController.popBackStack()
-                }
-                Action.DELETE -> {
-                    viewModel.deleteTask(upsertTaskId)
-                    Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
-                    navController.popBackStack()
-                }
-                Action.UPSERT -> {
-                    keyboardController?.hide()
-                    if (taskId == -1) {
-                        if (upsertTaskTitle.isNotEmpty() || upsertTaskDescription.isNotEmpty()) {
-                            val currentTask = viewModel.getCurrentTask()
-                            viewModel.upSertTask(currentTask)
-                            Toast.makeText(context, toastStringTaskSaved, Toast.LENGTH_SHORT).show()
-                        }
-                        navController.popBackStack()
-                    } else {
-                        if (upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.deleteButton),
+                        modifier = Modifier.width(140.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = { //DELETE TASK
                             viewModel.deleteTask(upsertTaskId)
                             Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
-                        } else {
-                            val currentTask = viewModel.getCurrentTask()
-                            viewModel.upSertTask(currentTask)
-                            Toast.makeText(context, toastStringTaskSaved, Toast.LENGTH_SHORT).show()
-                        }
+                        }) {
+                        Text(text = stringResource(id = R.string.delete), fontSize = 18.sp, color = Color.White)
                     }
                 }
             }
-        }
-    }) {
-        //criar ToDoTask ou editar uma...
-        UpsertTaskContent(
-            taskTitle = upsertTaskTitle,
-            taskDescription = upsertTaskDescription,
-            taskPriority = upsertTaskPriority,
-            onTitleChange = {
-                if (it.length <= TASK_TITLE_MAX_CHARS) {
-                    viewModel.upsertTaskTitle.value = it
+        }) {
+        Scaffold(
+            topBar = {
+                TaskAppBar(
+                    taskId = taskId, editMode = editMode, taskTitle = upsertTaskTitle
+                ) { action ->
+                    when (action) {
+                        Action.NO_ACTION -> {//não quero salvar se id for -1
+                            if (taskId != -1 && upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+                                viewModel.deleteTask(upsertTaskId)
+                                Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT)
+                                    .show()
+                            } else if (taskId != -1) {
+                                val currentTask = viewModel.getCurrentTask()
+                                viewModel.upSertTask(currentTask)
+                            }
+                            navController.popBackStack()
+                        }
+                        Action.DELETE -> {
+                            scope.launch {
+                                modalBottomSheetState.show()
+                            }
+                        }
+                        Action.UPSERT -> {
+                            keyboardController?.hide()
+                            if (taskId == -1) {
+                                if (upsertTaskTitle.isNotEmpty() || upsertTaskDescription.isNotEmpty()) {
+                                    val currentTask = viewModel.getCurrentTask()
+                                    viewModel.upSertTask(currentTask)
+                                    Toast.makeText(
+                                        context,
+                                        toastStringTaskSaved,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                navController.popBackStack()
+                            } else {
+                                if (upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+                                    viewModel.deleteTask(upsertTaskId)
+                                    Toast.makeText(
+                                        context,
+                                        toastStringTaskDeleted,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    navController.popBackStack()
+                                } else {
+                                    val currentTask = viewModel.getCurrentTask()
+                                    viewModel.upSertTask(currentTask)
+                                    Toast.makeText(
+                                        context,
+                                        toastStringTaskSaved,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+                    }
                 }
-            },
-            onDescriptionChange = {
-                viewModel.upsertTaskDescription.value = it
-            },
-            onPriorityChange = {
-                viewModel.upsertTaskPriority.value = it
-            },
-            onFocusChangeToEditMode = {
-                viewModel.editMode.value = it
-            }
-        )
+            }) {
+            //criar ToDoTask ou editar uma...
+            UpsertTaskContent(
+                taskTitle = upsertTaskTitle,
+                taskDescription = upsertTaskDescription,
+                taskPriority = upsertTaskPriority,
+                onTitleChange = {
+                    if (it.length <= TASK_TITLE_MAX_CHARS) {
+                        viewModel.upsertTaskTitle.value = it
+                    }
+                },
+                onDescriptionChange = {
+                    viewModel.upsertTaskDescription.value = it
+                },
+                onPriorityChange = {
+                    viewModel.upsertTaskPriority.value = it
+                },
+                onFocusChangeToEditMode = {
+                    viewModel.editMode.value = it
+                }
+            )
+        }
     }
 
+
     BackHandler {
-        if (taskId != -1 && upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
-            viewModel.deleteTask(upsertTaskId)
-            Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
-        } else if (taskId != -1) {
-            val currentTask = viewModel.getCurrentTask()
-            viewModel.upSertTask(currentTask)
+        if (modalBottomSheetState.isVisible) {
+            scope.launch {
+                modalBottomSheetState.hide()
+            }
+        } else {
+            if (taskId != -1 && upsertTaskTitle.isEmpty() && upsertTaskDescription.isEmpty()) {
+                viewModel.deleteTask(upsertTaskId)
+                Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
+            } else if (taskId != -1) {
+                val currentTask = viewModel.getCurrentTask()
+                viewModel.upSertTask(currentTask)
+            }
+            navController.popBackStack()
         }
-        navController.popBackStack()
     }
 }

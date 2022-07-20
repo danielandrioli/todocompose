@@ -43,3 +43,11 @@ val Colors.topAppBarContentColor: Color
 val Colors.topAppBarBackgroundColor: Color
     @Composable
     get() = if (!isSystemInDarkTheme()) SonicSilver else Color.Black
+
+val Colors.deleteButton: Color
+    @Composable
+    get() = Color(0xFF2055E1)
+
+val Colors.cancelButton: Color
+    @Composable
+    get() = if (!isSystemInDarkTheme()) Color(0xFFD6D8DD) else  Color(0xFF353639)

@@ -22,8 +22,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ToDoComposeTheme {
+                val endActivity: () -> Unit = {this.finish()}
+
                 navHostController = rememberNavController()
-                SetupNavHost(navController = navHostController, sharedViewModel)
+                SetupNavHost(navController = navHostController, sharedViewModel, endActivity)
             }
         }
     }

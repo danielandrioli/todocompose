@@ -1,15 +1,11 @@
 package com.dboy.todocompose.ui.presentation.screens.list_screen
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -21,21 +17,27 @@ import com.dboy.todocompose.ui.presentation.screens.list_screen.content.ListCont
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.ui.theme.ToDoComposeTheme
 import com.dboy.todocompose.utils.SearchAppBarState
+import kotlinx.coroutines.launch
 
 @Composable
 fun ListScreen(
     navController: NavHostController,
-    viewModel: SharedViewModel
+    viewModel: SharedViewModel,
+    endActivity: () -> Unit
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.getAllTasks()
     }
     val allTasksState by viewModel.taskList.collectAsState()
-    Scaffold(floatingActionButton = {
-        ListFab(navController = navController)
-    }, topBar = {
-        ListAppBar(viewModel)
-    }) {
+    val scaffoldState = rememberScaffoldState()
+
+    Scaffold(
+//        scaffoldState = scaffoldState,
+        floatingActionButton = {
+            ListFab(navController = navController)
+        }, topBar = {
+            ListAppBar(viewModel)
+        }) {
         ListContent(allTasksState, navController, viewModel)
     }
 
@@ -45,7 +47,8 @@ fun ListScreen(
             if (viewModel.searchTextState.value.isNotEmpty()) viewModel.getAllTasks()
             viewModel.searchTextState.value = ""
         } else {
-            navController.popBackStack()
+//            navController.popBackStack() //this is the last screen in navigation, so popBackStack doesn't work properly
+            endActivity()
         }
     }
 }
@@ -55,7 +58,27 @@ fun ListFab(navController: NavHostController) {
     FloatingActionButton(onClick = {
         Screen.Task.goToTaskScreen(navController, -1)
     }) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(id = R.string.fab_add_button))
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = stringResource(id = R.string.fab_add_button)
+        )
+    }
+}
+
+@Composable
+fun DisplaySnackbar(
+    scaffoldState: ScaffoldState
+) {
+    val snackbarMessage = stringResource(id = R.string.task_deleted)
+    val snackbarActionLabel = stringResource(id = R.string.undo_deletion)
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = true) {
+        scope.launch {
+            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                message = snackbarMessage,
+                actionLabel = snackbarActionLabel
+            )
+        }
     }
 }
 

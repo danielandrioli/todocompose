@@ -16,13 +16,14 @@ import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 @Composable
 fun SetupNavHost(
     navController: NavHostController,
-    viewModel: SharedViewModel
+    viewModel: SharedViewModel,
+    endActivity: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = Screen.List.route) {
         composable(
             route = Screen.List.route,
         ) {
-            ListScreen(navController = navController, viewModel)
+            ListScreen(navController = navController, viewModel, endActivity)
         }
 
         composable(

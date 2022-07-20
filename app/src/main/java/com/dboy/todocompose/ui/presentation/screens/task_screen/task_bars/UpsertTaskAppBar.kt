@@ -33,7 +33,7 @@ fun UpsertTaskAppBar(
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
             if (editMode || newTask) UpsertAction(onAddClick = onActionClick)
-            if (!newTask) DeleteAction(onDeleteClick = onActionClick)
+            if (!newTask && !editMode) DeleteAction(onDeleteClick = onActionClick)
         }
     )
 }
