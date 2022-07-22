@@ -2,6 +2,7 @@ package com.dboy.todocompose.ui.presentation.view_model
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,7 +32,9 @@ class SharedViewModel @Inject constructor(
     private val _task = MutableStateFlow<ToDoTask?>(null)
     val task: StateFlow<ToDoTask?> = _task
     val editMode = mutableStateOf(false)
-
+    val selectMode = mutableStateOf(false)
+//    val selectedTasks = mutableListOf<Int>()
+    val selectedTasks = mutableStateListOf<Int>()
     val upsertTaskId = mutableStateOf(0)
     val upsertTaskTitle = mutableStateOf("")
     val upsertTaskDescription = mutableStateOf("")

@@ -69,7 +69,7 @@ class ToDoDaoTest {
     fun deleteTask() {
         runTest {
             dao.upSertTask(task)
-            dao.deleteTask(task)
+            dao.deleteSingleTask(task.id)
             val allTasks = dao.getAllTasks().first()
             assertThat(allTasks).isEmpty()
         }

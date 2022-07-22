@@ -1,8 +1,10 @@
 package com.dboy.todocompose.ui.presentation.screens.list_screen.content
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -22,20 +24,33 @@ import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.navigation.Screen
 import com.dboy.todocompose.ui.theme.*
 import com.dboy.todocompose.utils.DateFormater
+import com.dboy.todocompose.utils.SearchAppBarState
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskItem(
     toDoTask: ToDoTask,
-    navController: NavHostController
+    navController: NavHostController,
+    isTaskSelected: Boolean,
+    isSelectModeOn: Boolean,
+    searchAppBarState: SearchAppBarState,
+    selectTask: (Int) -> Unit
 ) {
-    Surface(modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colors.taskItemBackgroundColor,
+    Log.i("ListContent", "TaskItem: ${toDoTask.id} - isTaskSelected: $isTaskSelected")
+    Surface(modifier = Modifier.fillMaxWidth().combinedClickable(
+        onClick = {
+            if (isSelectModeOn) {
+                selectTask(toDoTask.id)
+            } else Screen.Task.goToTaskScreen(navController, toDoTask.id)
+        }, onLongClick = {
+            if (searchAppBarState == SearchAppBarState.OPENED) {
+                Screen.Task.goToTaskScreen(navController, toDoTask.id)
+            } else selectTask(toDoTask.id)
+    }),
+        color = if (isTaskSelected) SelectedColor else MaterialTheme.colors.taskItemBackgroundColor,
         shape = RectangleShape,
         elevation = TASK_ITEM_ELEVATION,
-        onClick = {
-            Screen.Task.goToTaskScreen(navController, toDoTask.id)
-        }) {
+        ) {
         Column(
             modifier = Modifier
                 .padding(LARGE_PADDING)
@@ -77,7 +92,6 @@ fun TaskItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
             }
         }
     }
@@ -95,5 +109,7 @@ fun TaskItemPreview() {
         priority = Priority.MEDIUM,
         timeStamp = 0L
     )
-    TaskItem(toDoTask = task, navController = navController)
+    TaskItem(toDoTask = task, navController = navController, false, false,SearchAppBarState.OPENED) {
+
+    }
 }

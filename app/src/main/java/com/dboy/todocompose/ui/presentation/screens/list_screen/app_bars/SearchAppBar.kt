@@ -69,7 +69,7 @@ fun SearchAppbar(
                 IconButton(onClick = onCloseClicked) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(id = R.string.search_close),
+                        contentDescription = stringResource(id = R.string.close_action),
                         tint = MaterialTheme.colors.topAppBarContentColor
                     )
                 }

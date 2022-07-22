@@ -29,10 +29,8 @@ fun ListScreen(
         viewModel.getAllTasks()
     }
     val allTasksState by viewModel.taskList.collectAsState()
-    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
-//        scaffoldState = scaffoldState,
         floatingActionButton = {
             ListFab(navController = navController)
         }, topBar = {
@@ -42,6 +40,10 @@ fun ListScreen(
     }
 
     BackHandler {
+        if (viewModel.selectMode.value) {
+            viewModel.selectMode.value = false
+            viewModel.selectedTasks.clear()
+        } else
         if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED) {
             viewModel.searchAppBarState.value = SearchAppBarState.CLOSED
             if (viewModel.searchTextState.value.isNotEmpty()) viewModel.getAllTasks()

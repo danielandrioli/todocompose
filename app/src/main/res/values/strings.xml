@@ -3,7 +3,7 @@
     <string name="fab_add_button">Add new task</string>
     <string name="default_bar_title">Tasks</string>
     <string name="search_placeholder">Search for a task</string>
-    <string name="search_close">Close search</string>
+    <string name="close_action">Close</string>
     <string name="no_results_found">No results found. </string>
     <string name="empty_list">Your to-do list is empty. </string>
     <string name="empty_list_description">Empty list. </string>
@@ -15,9 +15,15 @@
     <string name="task_saved">Task saved!</string>
     <string name="task_deleted">Task deleted!</string>
     <string name="undo_deletion">UNDO</string>
-    <string name="ask_deletion">Delete anotation?</string>
+    <string name="ask_deletion">Delete annotation?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="selected_task">selected task</string>
+    <string name="selected_tasks">selected tasks</string>
+<!--    <plurals name="selected_tasks" >-->
+<!--        <string quantity="one">%d task selected</string>-->
+<!--        <string quantity="more_than_one">%d tasks selected</string>-->
+<!--    </plurals>-->
 
     <!--Icons-->
     <string name="icon_navigate_back">Go back</string>

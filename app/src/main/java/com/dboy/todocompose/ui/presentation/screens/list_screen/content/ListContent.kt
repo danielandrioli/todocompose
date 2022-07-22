@@ -1,5 +1,6 @@
 package com.dboy.todocompose.ui.presentation.screens.list_screen.content
 
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -17,6 +18,9 @@ fun ListContent(
     navController: NavHostController,
     viewModel: SharedViewModel
 ) {
+    val selectedTasks = viewModel.selectedTasks
+    Log.i("ListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
+
     when (taskList) {
         is RequestState.Success -> {
             if (taskList.data.isEmpty()) {
@@ -26,7 +30,7 @@ fun ListContent(
                         contentDescription = stringResource(id = R.string.neutral_face_icon),
                         painterResource = R.drawable.ic_sentiment_neutral
                     )
-                } else if (viewModel.searchAppBarState.value == SearchAppBarState.CLOSED){
+                } else if (viewModel.searchAppBarState.value == SearchAppBarState.CLOSED) {
                     EmptyContent(
                         emptyContentText = stringResource(id = R.string.empty_list),
                         contentDescription = stringResource(id = R.string.empty_list_description),
@@ -39,7 +43,20 @@ fun ListContent(
                         key = {
                             it.id
                         }) {
-                        TaskItem(toDoTask = it, navController = navController)
+                        TaskItem(
+                            toDoTask = it, navController = navController,
+                            isTaskSelected = selectedTasks.contains(it.id),
+                            isSelectModeOn = viewModel.selectMode.value,
+                            searchAppBarState = viewModel.searchAppBarState.value,
+                            selectTask = { taskId ->
+                                if (selectedTasks.contains(taskId)) {
+                                    selectedTasks.remove(taskId)
+                                } else {
+                                    selectedTasks.add(taskId)
+                                }
+                                viewModel.selectMode.value = !selectedTasks.isEmpty()
+                            }
+                        )
                     }
                 }
             }
