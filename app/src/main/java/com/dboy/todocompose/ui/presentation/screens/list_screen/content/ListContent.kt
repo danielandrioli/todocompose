@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
@@ -14,16 +16,19 @@ import com.dboy.todocompose.utils.SearchAppBarState
 
 @Composable
 fun ListContent(
-    taskList: RequestState<List<ToDoTask>>,
+    taskListState: RequestState<List<ToDoTask>>,
     navController: NavHostController,
     viewModel: SharedViewModel
 ) {
     val selectedTasks = viewModel.selectedTasks
-    Log.i("ListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
+    Log.i("DBGListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
 
-    when (taskList) {
+    when (taskListState) {
         is RequestState.Success -> {
-            if (taskList.data.isEmpty()) {
+//            val taskList = taskListState.data
+            val taskList = viewModel.lista.toList()
+
+            if (taskList.isEmpty()) {
                 if (viewModel.searchTextState.value.isNotEmpty()) {
                     EmptyContent(
                         emptyContentText = stringResource(id = R.string.no_results_found),
@@ -39,7 +44,7 @@ fun ListContent(
                 }
             } else {
                 LazyColumn {
-                    items(items = taskList.data,
+                    items(items = taskList,
                         key = {
                             it.id
                         }) {
@@ -59,17 +64,18 @@ fun ListContent(
                         )
                     }
                 }
+                Log.i("DBGListContent", "ListContent: $taskList")
             }
         }
-        is RequestState.Loading -> "" //CRIAR AQUI UMA TELA DE LOADING
+        is RequestState.Loading -> Log.i("DBGListContent", "Loading") //CRIAR AQUI UMA TELA DE LOADING
         is RequestState.Error -> {
             EmptyContent(
                 emptyContentText = stringResource(id = R.string.error_message),
                 contentDescription = stringResource(id = R.string.sad_face_icon),
                 painterResource = R.drawable.ic_sentiment_dissatisfied
             )
+            Log.i("DBGListContent", "Error")
         }
-        is RequestState.Idle -> ""
+        is RequestState.Idle -> Log.i("DBGListContent", "Idle") //MUDAR
     }
-
 }

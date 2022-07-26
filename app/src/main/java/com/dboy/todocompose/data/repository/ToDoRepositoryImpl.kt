@@ -14,8 +14,7 @@ class ToDoRepositoryImpl(private val dao: ToDoDao) : ToDoRepository {
     override suspend fun upSertTask(task: ToDoTask) = dao.upSertTask(task)
 
     override suspend fun deleteTask(id: Int) = dao.deleteSingleTask(id)
-
-    override suspend fun deleteAllTasks() = dao.deleteAllTasks()
+    override suspend fun deleteSelectedTasks(vararg tasksId: Int) = dao.deleteTasks(tasksId = tasksId)
 
     override fun searchDatabase(searchQuery: String): Flow<List<ToDoTask>> =
         dao.searchDatabase(searchQuery)

@@ -19,11 +19,13 @@ interface ToDoDao {
 //    @Delete
 //    suspend fun deleteTask(task: ToDoTask)
 
+
+
     @Query("DELETE FROM todo_table WHERE id = :id")
     suspend fun deleteSingleTask(id: Int)
 
-    @Query("DELETE FROM todo_table")
-    suspend fun deleteAllTasks()
+    @Query("DELETE FROM todo_table WHERE id IN (:tasksId)")
+    suspend fun deleteTasks(vararg tasksId: Int)
 
     @Query("SELECT * FROM todo_table WHERE title LIKE '%' || :searchQuery || '%' " +
             "OR description LIKE '%' || :searchQuery || '%'")

@@ -30,12 +30,9 @@ class FakeToDoRepository : ToDoRepository {
     }
 
     override suspend fun deleteTask(taskId: Int) {
-        listOfTasks.removeAt(taskId)
-    }
-
-    override suspend fun deleteAllTasks() {
-        listOfTasks.removeAll {
-            true
+//        listOfTasks.removeAt(taskId)
+        listOfTasks.removeIf() {
+            it.id == taskId
         }
     }
 

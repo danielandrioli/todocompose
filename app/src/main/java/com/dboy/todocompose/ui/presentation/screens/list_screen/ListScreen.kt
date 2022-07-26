@@ -11,11 +11,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dboy.todocompose.R
+import com.dboy.todocompose.data.models.Priority
+import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.navigation.Screen
 import com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars.ListAppBar
 import com.dboy.todocompose.ui.presentation.screens.list_screen.content.ListContent
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.utils.DateFormater
 import com.dboy.todocompose.utils.SearchAppBarState
 import kotlinx.coroutines.launch
 
@@ -25,14 +28,14 @@ fun ListScreen(
     viewModel: SharedViewModel,
     endActivity: () -> Unit
 ) {
-    LaunchedEffect(key1 = true) {
-        viewModel.getAllTasks()
-    }
+//    LaunchedEffect(key1 = true) {
+//        viewModel.getAllTasks()
+//    }
     val allTasksState by viewModel.taskList.collectAsState()
 
     Scaffold(
         floatingActionButton = {
-            ListFab(navController = navController)
+            ListFab(navController = navController, viewModel)
         }, topBar = {
             ListAppBar(viewModel)
         }) {
@@ -56,8 +59,18 @@ fun ListScreen(
 }
 
 @Composable
-fun ListFab(navController: NavHostController) {
+fun ListFab(navController: NavHostController, viewModel: SharedViewModel) {
     FloatingActionButton(onClick = {
+//        for (i in 1..5) { //JUST FOR TEST
+//        viewModel.upSertTask(
+//            ToDoTask(
+//                title = "$i",
+//                description = "tst",
+//                priority = Priority.LOW,
+//                DateFormater.getTimeStampAsLong()
+//            )
+//        )
+//    }
         Screen.Task.goToTaskScreen(navController, -1)
     }) {
         Icon(

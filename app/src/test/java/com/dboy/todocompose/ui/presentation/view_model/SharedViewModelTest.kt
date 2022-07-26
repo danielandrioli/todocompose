@@ -58,17 +58,18 @@ class SharedViewModelTest {
     }
 
     @Test
-    fun `deleting all tasks works`() {
+    fun `deleting selected tasks works`() {
         runTest {
             viewModel.upSertTask(taskExample)
             viewModel.upSertTask(taskExample.copy(title = "Another one", id = 1))
             viewModel.getAllTasks()
+            viewModel.selectedTasks.add(0)
+            viewModel.selectedTasks.add(1)
 
+            viewModel.deleteMultipleSelectedTasks()
 
             val taskRequest = viewModel.taskList.value
             if (taskRequest is RequestState.Success) {
-                assertThat(taskRequest.data).isNotEmpty()
-                viewModel.deleteAllTasks()
                 assertThat(taskRequest.data).isEmpty()
             } else {
                 throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
