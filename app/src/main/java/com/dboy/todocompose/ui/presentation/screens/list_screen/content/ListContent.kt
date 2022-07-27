@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
@@ -16,17 +14,17 @@ import com.dboy.todocompose.utils.SearchAppBarState
 
 @Composable
 fun ListContent(
-    taskListState: RequestState<List<ToDoTask>>,
+    taskListState: RequestState,
     navController: NavHostController,
     viewModel: SharedViewModel
 ) {
     val selectedTasks = viewModel.selectedTasks
-    Log.i("DBGListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
+//    Log.i("DBGListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
 
     when (taskListState) {
         is RequestState.Success -> {
-//            val taskList = taskListState.data
-            val taskList = viewModel.lista.toList()
+            val taskList = viewModel.taskList
+            Log.i("DBGListContent", "${taskList.toList()}, SearchText: ${viewModel.searchTextState.value}")
 
             if (taskList.isEmpty()) {
                 if (viewModel.searchTextState.value.isNotEmpty()) {
@@ -64,7 +62,6 @@ fun ListContent(
                         )
                     }
                 }
-                Log.i("DBGListContent", "ListContent: $taskList")
             }
         }
         is RequestState.Loading -> Log.i("DBGListContent", "Loading") //CRIAR AQUI UMA TELA DE LOADING

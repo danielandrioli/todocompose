@@ -26,9 +26,8 @@ class SharedViewModel @Inject constructor(
     private val repository: ToDoRepository,
     private val dispatcher: DispatcherProvider
 ) : ViewModel() {
-    private val _taskList = MutableStateFlow<RequestState<MutableList<ToDoTask>>>(RequestState.Idle)
-    val taskList: StateFlow<RequestState<MutableList<ToDoTask>>> = _taskList
-    var lista = mutableStateListOf<ToDoTask>()
+    val taskRequisitionState = MutableStateFlow<RequestState>(RequestState.Idle)
+    val taskList = mutableStateListOf<ToDoTask>()
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
@@ -45,25 +44,30 @@ class SharedViewModel @Inject constructor(
     init {
         getAllTasks()
     }
+    /*
+    New problem: when the user makes a search and opens the task, then goes back to the ListScreen, the list gets updated
+    with all the tasks. I don't know why this happens.
+     */
 
     fun getAllTasks() {
-        _taskList.value = RequestState.Loading
+
+        taskRequisitionState.value = RequestState.Loading
         viewModelScope.launch(dispatcher.io) {
             try {
                 repository.getAllTasks().collect {
-                    _taskList.value = RequestState.Success(it.toMutableList())//MUDAR ESSA SEALED CLASS. DESNECESSÁRIO SEGURAR DADO AGORA
 
                     withContext(dispatcher.main) {//snapshots are transactional and run on ui thread, this is why I need to change dispatcher
-                        lista.clear()
-                        lista.addAll(it.toMutableStateList())
+                        taskList.clear()
+                        taskList.addAll(it.toMutableStateList())
+                        taskRequisitionState.value = RequestState.Success //putting this line of code here, because then the empty list image won't always show when the user opens the app
                     }
                 }
             } catch (e: Exception) {
-                _taskList.value = RequestState.Error(e)
+                taskRequisitionState.value = RequestState.Error(e)
                 Log.d("DBGViewModel", "error: ${e.localizedMessage}")
             }
         }
-        Log.d("DBGViewModel", "getAllTasks function")
+//        Log.d("DBGViewModel", "getAllTasks function")
     }
     /*
     PROBLEM I HAD: When the user selected multiple tasks on the ListScreen and pressed the delete icon, not always the LazyColumn
@@ -99,13 +103,16 @@ class SharedViewModel @Inject constructor(
             repository.deleteSelectedTasks(tasksId = selectedTasks.toIntArray())
             selectedTasks.clear()
         }
-        Log.d("DBGViewModel", "deleteMultipleTasks function.")
+//        Log.d("DBGViewModel", "deleteMultipleTasks function.")
     }
 
     fun searchDatabase(query: String) {
+        Log.d("DBGViewModel", "searchDatabase function. $query")
+
         viewModelScope.launch(dispatcher.io) {
             repository.searchDatabase(query).collect() {
-                _taskList.value = RequestState.Success(it.toMutableList())
+                taskList.clear()
+                taskList.addAll(it.toMutableStateList())
             }
         }
     }

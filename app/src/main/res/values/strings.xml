@@ -20,6 +20,8 @@
     <string name="cancel">Cancel</string>
     <string name="selected_task">selected task</string>
     <string name="selected_tasks">selected tasks</string>
+    <string name="delete_selected_task">Delete selected task?</string>
+    <string name="delete_multiple_selected_tasks">Delete %d selected tasks?</string>
 <!--    <plurals name="selected_tasks" >-->
 <!--        <string quantity="one">%d task selected</string>-->
 <!--        <string quantity="more_than_one">%d tasks selected</string>-->

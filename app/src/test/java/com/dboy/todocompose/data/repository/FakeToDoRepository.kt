@@ -32,7 +32,17 @@ class FakeToDoRepository : ToDoRepository {
     override suspend fun deleteTask(taskId: Int) {
 //        listOfTasks.removeAt(taskId)
         listOfTasks.removeIf() {
+            println("it.id: ${it.id} | taskId: $taskId")
             it.id == taskId
+        }
+        println("lista: $listOfTasks")
+
+    }
+
+    override suspend fun deleteSelectedTasks(vararg tasksId: Int) {
+        println(tasksId.toList())
+        tasksId.forEach {
+            deleteTask(it)
         }
     }
 

@@ -9,15 +9,13 @@ import com.dboy.todocompose.utils.SearchAppBarState
 
 @Composable
 fun ListAppBar(
-    viewModel: SharedViewModel
+    viewModel: SharedViewModel,
+    onDeleteTasks: () -> Unit
 ) {
     if (viewModel.selectMode.value) {
         SelectTasksAppBar(
             selectedTasksQuantity = viewModel.selectedTasks.size,
-            onDeleteTasks = {
-                viewModel.deleteMultipleSelectedTasks()
-                viewModel.selectMode.value = false
-            },
+            onDeleteTasks = onDeleteTasks,
             onCloseAppBar = {
                 viewModel.selectMode.value = false
                 viewModel.selectedTasks.clear()
@@ -28,9 +26,7 @@ fun ListAppBar(
                 viewModel.searchAppBarState.value = SearchAppBarState.OPENED
             },
             onSortClicked = {
-                if (viewModel.taskList.value is RequestState.Success) {
-                    Log.d("DBGViewModel", "${(viewModel.taskList.value as RequestState.Success<List<ToDoTask>>).data}")
-                }
+                // TODO:
             }
         )
     } else {
@@ -46,8 +42,7 @@ fun ListAppBar(
                     viewModel.getAllTasks()
                 }
                 viewModel.searchAppBarState.value = SearchAppBarState.CLOSED
-            },
-            onSearchClicked = { }
+            }
         )
     }
 }

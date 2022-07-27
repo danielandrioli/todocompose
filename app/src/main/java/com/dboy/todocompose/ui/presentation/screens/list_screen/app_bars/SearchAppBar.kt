@@ -29,8 +29,7 @@ import com.dboy.todocompose.ui.theme.topAppBarContentColor
 fun SearchAppbar(
     text: String,
     onTextChange: (String) -> Unit,
-    onCloseClicked: () -> Unit,
-    onSearchClicked: (String) -> Unit
+    onCloseClicked: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -75,9 +74,6 @@ fun SearchAppbar(
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = {
-                onSearchClicked(text)
-            }),
             colors = TextFieldDefaults.textFieldColors(
                 cursorColor = MaterialTheme.colors.topAppBarContentColor,
                 focusedIndicatorColor = Color.Transparent,
@@ -96,7 +92,5 @@ fun SearchAppbar(
 @Preview
 @Composable
 fun SearchAppBarPreview() {
-    SearchAppbar(text = "Aew", onTextChange = {}, onCloseClicked = {}) {
-
-    }
+    SearchAppbar(text = "Aew", onTextChange = {}, onCloseClicked = {})
 }
