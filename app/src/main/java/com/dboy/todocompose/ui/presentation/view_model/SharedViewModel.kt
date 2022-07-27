@@ -150,4 +150,12 @@ class SharedViewModel @Inject constructor(
         upsertTaskPriority.value = Priority.LOW
         upsertTaskId.value = 0
     }
+
+    fun cleanSearchBarAndGetAllTasks() {
+        if (searchAppBarState.value == SearchAppBarState.OPENED) {
+            searchTextState.value = ""
+            searchAppBarState.value = SearchAppBarState.CLOSED
+            getAllTasks()
+        }
+    }
 }

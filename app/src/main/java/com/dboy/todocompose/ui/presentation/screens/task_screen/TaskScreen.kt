@@ -30,6 +30,7 @@ import com.dboy.todocompose.ui.theme.cancelButton
 import com.dboy.todocompose.ui.theme.deleteButton
 import com.dboy.todocompose.utils.Action
 import com.dboy.todocompose.utils.Constants.TASK_TITLE_MAX_CHARS
+import com.dboy.todocompose.utils.SearchAppBarState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
@@ -62,6 +63,7 @@ fun TaskScreen(
         onConfirmDeletionClick = {
             viewModel.deleteTask(upsertTaskId)
             Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
+            viewModel.cleanSearchBarAndGetAllTasks()
             navController.popBackStack()
         }) {
         Scaffold(
@@ -79,6 +81,7 @@ fun TaskScreen(
                                 val currentTask = viewModel.getCurrentTask()
                                 viewModel.upSertTask(currentTask)
                             }
+                            viewModel.cleanSearchBarAndGetAllTasks()
                             navController.popBackStack()
                         }
                         Action.DELETE -> {
@@ -107,6 +110,7 @@ fun TaskScreen(
                                         toastStringTaskDeleted,
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    viewModel.cleanSearchBarAndGetAllTasks()
                                     navController.popBackStack()
                                 } else {
                                     val currentTask = viewModel.getCurrentTask()
@@ -158,6 +162,7 @@ fun TaskScreen(
                 val currentTask = viewModel.getCurrentTask()
                 viewModel.upSertTask(currentTask)
             }
+            viewModel.cleanSearchBarAndGetAllTasks()
             navController.popBackStack()
         }
     }
