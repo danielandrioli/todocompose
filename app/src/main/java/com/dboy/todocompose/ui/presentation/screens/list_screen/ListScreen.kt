@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -48,7 +49,9 @@ fun ListScreen(
         }) {
         Scaffold(
             floatingActionButton = {
-                ListFab(navController = navController, viewModel)
+                if (viewModel.searchAppBarState.value == SearchAppBarState.CLOSED && !viewModel.selectMode.value) {
+                    ListFab(navController = navController, viewModel)
+                }
             }, topBar = {
                 ListAppBar(viewModel, onDeleteTasks = {
                     scope.launch {
@@ -72,7 +75,6 @@ fun ListScreen(
         } else
             if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED) {
                 viewModel.searchAppBarState.value = SearchAppBarState.CLOSED
-//                if (viewModel.searchTextState.value.isNotEmpty()) viewModel.getAllTasks()
                 viewModel.searchTextState.value = ""
             } else {
 //            navController.popBackStack() //this is the last screen in navigation, so popBackStack doesn't work properly
@@ -104,23 +106,6 @@ fun createTasksForTest(viewModel: SharedViewModel) {
                 DateFormater.getTimeStampAsLong()
             )
         )
-    }
-}
-
-@Composable
-fun DisplaySnackbar(
-    scaffoldState: ScaffoldState
-) {
-    val snackbarMessage = stringResource(id = R.string.task_deleted)
-    val snackbarActionLabel = stringResource(id = R.string.undo_deletion)
-    val scope = rememberCoroutineScope()
-    LaunchedEffect(key1 = true) {
-        scope.launch {
-            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                message = snackbarMessage,
-                actionLabel = snackbarActionLabel
-            )
-        }
     }
 }
 
