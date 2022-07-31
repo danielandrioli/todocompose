@@ -34,6 +34,9 @@ fun ListScreen(
     val modalBottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+//    val sortState by viewModel.sortState.collectAsState()
+//    val lowPriorityTasks by viewModel.lowPriorityTasks.collectAsState()
+//    val highPriorityTasks by viewModel.highPriorityTasks.collectAsState()
 
     DeleteTaskBottomSheet(
         sheetState = modalBottomSheetState,

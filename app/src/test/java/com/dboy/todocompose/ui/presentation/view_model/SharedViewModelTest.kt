@@ -11,8 +11,6 @@ import com.dboy.todocompose.ui.presentation.FakeDispatchers
 import com.dboy.todocompose.utils.RequestState
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -50,7 +48,7 @@ class SharedViewModelTest {
 
             val taskRequest = viewModel.taskRequisitionState.value
             if (taskRequest is RequestState.Success) {
-                assertThat(viewModel.taskList.toList().first()).isEqualTo(taskExample)
+                assertThat(viewModel.nonePriorityTaskList.toList().first()).isEqualTo(taskExample)
             } else {
                 throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
             }
@@ -70,8 +68,8 @@ class SharedViewModelTest {
 
             val taskRequest = viewModel.taskRequisitionState.value
             if (taskRequest is RequestState.Success) {
-                println("aaa" + viewModel.taskList.toList())
-                assertThat(viewModel.taskList.toList()).isEmpty()
+                println("aaa" + viewModel.nonePriorityTaskList.toList())
+                assertThat(viewModel.nonePriorityTaskList.toList()).isEmpty()
             } else {
                 throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
             }
@@ -88,7 +86,7 @@ class SharedViewModelTest {
 
             val taskRequest = viewModel.taskRequisitionState.value
             if (taskRequest is RequestState.Success) {
-                assertThat(viewModel.taskList.toList().first()).isEqualTo(newTask)
+                assertThat(viewModel.nonePriorityTaskList.toList().first()).isEqualTo(newTask)
             } else {
                 throw UnsuccessfulRequestException("The request made from ViewModel was not successful!")
             }

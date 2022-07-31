@@ -16,14 +16,20 @@ class ToDoRepositoryImpl(private val dao: ToDoDao) : ToDoRepository {
     override suspend fun deleteTask(id: Int) = dao.deleteSingleTask(id)
     override suspend fun deleteSelectedTasks(vararg tasksId: Int) = dao.deleteTasks(tasksId = tasksId)
 
-    override fun searchDatabase(searchQuery: String): Flow<List<ToDoTask>> =
-        dao.searchDatabase(searchQuery)
+    override fun searchDatabaseNonePriorityOrder(searchQuery: String): Flow<List<ToDoTask>> =
+        dao.searchDatabaseNonePriorityOrder(searchQuery)
+
+    override fun searchDatabaseLowPriorityOrder(searchQuery: String): Flow<List<ToDoTask>> =
+        dao.searchDatabaseLowPriorityOrder(searchQuery)
+
+    override fun searchDatabaseHighPriorityOrder(searchQuery: String): Flow<List<ToDoTask>> =
+        dao.searchDatabaseHighPriorityOrder(searchQuery)
 
     override fun sortByLowPriority(): Flow<List<ToDoTask>> = dao.sortByLowPriority()
 
     override fun sortByHighPriority(): Flow<List<ToDoTask>> = dao.sortByHighPriority()
 
-    override fun sortByDateStartingFromFirst(): Flow<List<ToDoTask>> = dao.sortByDateStartingFromFirst()
+    override fun sortByDateStartingFromOlder(): Flow<List<ToDoTask>> = dao.sortByDateStartingFromOlder()
 
     override fun sortByDateStartingFromLatest(): Flow<List<ToDoTask>> = dao.sortByDateStartingFromLatest()
 }

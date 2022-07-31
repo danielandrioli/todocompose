@@ -10,9 +10,11 @@ interface ToDoRepository {
     suspend fun upSertTask(task: ToDoTask)
     suspend fun deleteTask(taskId: Int)
     suspend fun deleteSelectedTasks(vararg tasksId: Int)
-    fun searchDatabase(searchQuery: String) : Flow<List<ToDoTask>>
+    fun searchDatabaseNonePriorityOrder(searchQuery: String) : Flow<List<ToDoTask>>
+    fun searchDatabaseLowPriorityOrder(searchQuery: String) : Flow<List<ToDoTask>>
+    fun searchDatabaseHighPriorityOrder(searchQuery: String) : Flow<List<ToDoTask>>
     fun sortByLowPriority() : Flow<List<ToDoTask>>
     fun sortByHighPriority() : Flow<List<ToDoTask>>
-    fun sortByDateStartingFromFirst() : Flow<List<ToDoTask>>
+    fun sortByDateStartingFromOlder() : Flow<List<ToDoTask>>
     fun sortByDateStartingFromLatest() : Flow<List<ToDoTask>>
 }

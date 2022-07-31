@@ -25,8 +25,8 @@ fun ListAppBar(
             onSearchClicked = {
                 viewModel.searchAppBarState.value = SearchAppBarState.OPENED
             },
-            onSortClicked = {
-                // TODO:
+            onSortClicked = {priority ->
+                viewModel.persistSortState(priority)
             }
         )
     } else {

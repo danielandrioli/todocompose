@@ -46,7 +46,7 @@ class FakeToDoRepository : ToDoRepository {
         }
     }
 
-    override fun searchDatabase(searchQuery: String): Flow<List<ToDoTask>> {
+    override fun searchDatabaseNonePriorityOrder(searchQuery: String): Flow<List<ToDoTask>> {
         TODO("Not yet implemented")
     }
 
@@ -58,7 +58,7 @@ class FakeToDoRepository : ToDoRepository {
         TODO("Not yet implemented")
     }
 
-    override fun sortByDateStartingFromFirst(): Flow<List<ToDoTask>> {
+    override fun sortByDateStartingFromOlder(): Flow<List<ToDoTask>> {
         TODO("Not yet implemented")
     }
 

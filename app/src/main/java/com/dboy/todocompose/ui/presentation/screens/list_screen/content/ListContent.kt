@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
+import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.utils.RequestState
@@ -18,13 +21,52 @@ fun ListContent(
     navController: NavHostController,
     viewModel: SharedViewModel
 ) {
+    val sortState by viewModel.sortRequestState.collectAsState()
+    val priority by viewModel.mPriority.collectAsState()
+    val lowPriorityTasks by viewModel.lowPriorityTasksOrderList.collectAsState()
+    val highPriorityTasks by viewModel.highPriorityTasksOrderList.collectAsState()
+    val nonePriorityTasks = viewModel.nonePriorityTaskList
+    val lowPriorityTasksSearch = viewModel.lowPriorityTasksToHighSearch
+    val highPriorityTasksSearch = viewModel.highPriorityTasksToLowSearch
+    val nonePriorityTasksSearch = viewModel.nonePriorityTasksSearch
+
     val selectedTasks = viewModel.selectedTasks
 //    Log.i("DBGListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
 
+//    val taskList = if (sortState is RequestState.Success){
+//        when(priority) {
+//            Priority.LOW -> lowPriorityTasks
+//            Priority.HIGH -> highPriorityTasks
+//            else -> {viewModel.taskList.toList()}
+//        }
+//    } else viewModel.taskList.toList()
+
+    val taskList = when (sortState) {
+        is RequestState.Success -> {
+            if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty())  {
+                when(priority) {
+                    Priority.LOW -> lowPriorityTasksSearch
+                    Priority.HIGH -> highPriorityTasksSearch
+                    else -> nonePriorityTasksSearch
+                }
+            } else {
+                when(priority) {
+                    Priority.LOW -> lowPriorityTasks
+                    Priority.HIGH -> highPriorityTasks
+                    else -> {nonePriorityTasks}
+                }
+            }
+        }
+        else -> {
+            emptyList<ToDoTask>()
+        }
+    }
+    Log.i("DBGListContent", "TASK LIST: ${taskList.toList()}")
+
+
     when (taskListState) {
         is RequestState.Success -> {
-            val taskList = viewModel.taskList
-            Log.i("DBGListContent", "${taskList.toList()}, SearchText: ${viewModel.searchTextState.value}")
+//            val taskList = viewModel.taskList
 
             if (taskList.isEmpty()) {
                 if (viewModel.searchTextState.value.isNotEmpty()) {

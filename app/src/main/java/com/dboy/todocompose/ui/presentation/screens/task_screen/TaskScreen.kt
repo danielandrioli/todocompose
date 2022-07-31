@@ -3,22 +3,14 @@ package com.dboy.todocompose.ui.presentation.screens.task_screen
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
@@ -26,11 +18,8 @@ import com.dboy.todocompose.ui.components.DeleteTaskBottomSheet
 import com.dboy.todocompose.ui.presentation.screens.task_screen.content.UpsertTaskContent
 import com.dboy.todocompose.ui.presentation.screens.task_screen.task_bars.TaskAppBar
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
-import com.dboy.todocompose.ui.theme.cancelButton
-import com.dboy.todocompose.ui.theme.deleteButton
 import com.dboy.todocompose.utils.Action
 import com.dboy.todocompose.utils.Constants.TASK_TITLE_MAX_CHARS
-import com.dboy.todocompose.utils.SearchAppBarState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
@@ -63,7 +52,7 @@ fun TaskScreen(
         onConfirmDeletionClick = {
             viewModel.deleteTask(upsertTaskId)
             Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
-            viewModel.cleanSearchBarAndGetAllTasks()
+            viewModel.cleanSearchBar()
             navController.popBackStack()
         }) {
         Scaffold(
@@ -81,7 +70,7 @@ fun TaskScreen(
                                 val currentTask = viewModel.getCurrentTask()
                                 viewModel.upSertTask(currentTask)
                             }
-                            viewModel.cleanSearchBarAndGetAllTasks()
+                            viewModel.cleanSearchBar()
                             navController.popBackStack()
                         }
                         Action.DELETE -> {
@@ -110,7 +99,7 @@ fun TaskScreen(
                                         toastStringTaskDeleted,
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    viewModel.cleanSearchBarAndGetAllTasks()
+                                    viewModel.cleanSearchBar()
                                     navController.popBackStack()
                                 } else {
                                     val currentTask = viewModel.getCurrentTask()
@@ -162,7 +151,7 @@ fun TaskScreen(
                 val currentTask = viewModel.getCurrentTask()
                 viewModel.upSertTask(currentTask)
             }
-            viewModel.cleanSearchBarAndGetAllTasks()
+            viewModel.cleanSearchBar()
             navController.popBackStack()
         }
     }

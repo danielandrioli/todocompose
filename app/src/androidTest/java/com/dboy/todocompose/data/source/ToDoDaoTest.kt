@@ -93,7 +93,7 @@ class ToDoDaoTest {
             dao.upSertTask(task)
             dao.upSertTask(task.copy(title = "Luva de pedreiro", id = 2))
 
-            val queryResult = dao.searchDatabase("pedre").first()[0]
+            val queryResult = dao.searchDatabaseNonePriorityOrder("pedre").first()[0]
             assertThat(queryResult.title).contains("Luva de pedreiro")
         }
     }
@@ -138,7 +138,7 @@ class ToDoDaoTest {
             dao.upSertTask(newTask.copy(title = "Hihihi", timeStamp = 2L))
             dao.upSertTask(newTask.copy(title = "Cabelo twonight", timeStamp = 9999L))
 
-            val taskList = dao.sortByDateStartingFromFirst().first()
+            val taskList = dao.sortByDateStartingFromOlder().first()
             assertThat(taskList[0].timeStamp).isEqualTo(2L)
         }
     }

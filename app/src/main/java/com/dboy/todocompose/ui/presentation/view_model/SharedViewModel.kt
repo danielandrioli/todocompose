@@ -9,14 +9,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
+import com.dboy.todocompose.data.repository.DataStoreRepository
 import com.dboy.todocompose.data.repository.ToDoRepository
 import com.dboy.todocompose.ui.presentation.DispatcherProvider
 import com.dboy.todocompose.utils.DateFormater
 import com.dboy.todocompose.utils.RequestState
 import com.dboy.todocompose.utils.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -24,10 +24,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel @Inject constructor(
     private val repository: ToDoRepository,
-    private val dispatcher: DispatcherProvider
+    private val dispatcher: DispatcherProvider,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
     val taskRequisitionState = MutableStateFlow<RequestState>(RequestState.Idle)
-    val taskList = mutableStateListOf<ToDoTask>()
+    val nonePriorityTaskList = mutableStateListOf<ToDoTask>()
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
@@ -43,23 +44,23 @@ class SharedViewModel @Inject constructor(
 
     init {
         getAllTasks()
+        readSortState()
     }
     /*
     New problem: when the user makes a search and opens the task, then goes back to the ListScreen, the list gets updated
-    with all the tasks. I don't know why this happens.
+    with all the tasks (not just the search). I don't know why this happens.
      */
 
     fun getAllTasks() {
-
-        taskRequisitionState.value = RequestState.Loading
+        taskRequisitionState.value = RequestState.Loading  //at this point of the project, the request state is kind useless...
         viewModelScope.launch(dispatcher.io) {
             try {
                 repository.getAllTasks().collect {
-
                     withContext(dispatcher.main) {//snapshots are transactional and run on ui thread, this is why I need to change dispatcher
-                        taskList.clear()
-                        taskList.addAll(it.toMutableStateList())
-                        taskRequisitionState.value = RequestState.Success //putting this line of code here, because then the empty list image won't always show when the user opens the app
+                        nonePriorityTaskList.clear()
+                        nonePriorityTaskList.addAll(it.toMutableStateList())
+                        taskRequisitionState.value =
+                            RequestState.Success //putting this line of code here, because then the empty list image won't always show when the user opens the app
                     }
                 }
             } catch (e: Exception) {
@@ -67,15 +68,15 @@ class SharedViewModel @Inject constructor(
                 Log.d("DBGViewModel", "error: ${e.localizedMessage}")
             }
         }
-//        Log.d("DBGViewModel", "getAllTasks function")
     }
+
     /*
     PROBLEM I HAD: When the user selected multiple tasks on the ListScreen and pressed the delete icon, not always the LazyColumn
     got refreshed. Always the data were deleted (verified by logs).
     After the unsuccessful recomposition, if the user left the app (or entered another screen) and went back to ListScreen,
     then the UI would get recomposed and the list successfully refreshed.
 
-    Solution: the sealed class responsible for the requisition state (success, error, idle) is not holding anymore the data from
+    Solution: the sealed class responsible for the requisition state (success, error, idle) is not holding the data anymore from
     the repository. Now this object is responsible just for telling the UI about the success or not of the requisition.
     Now there's a property that is a mutableStateListOf<ToDoTask> and it holds the collected data from the repository.
 
@@ -91,6 +92,53 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+    private fun readSortState() {
+        viewModelScope.launch(dispatcher.io) {
+            try {
+                dataStoreRepository.readSortState
+                    .map {
+                        Priority.valueOf(it)
+                    }.collect() {
+                        _sortRequestState.value = RequestState.Success
+                        _priority.value = it
+                    }
+            } catch (e: Exception) {
+                _sortRequestState.value = RequestState.Error(e)
+                Log.d("DBGViewModel", "error | sort state: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    private val _priority = MutableStateFlow<Priority>(Priority.NONE)
+    val mPriority: StateFlow<Priority> = _priority
+    private val _sortRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
+    val sortRequestState: StateFlow<RequestState> = _sortRequestState
+
+    fun persistSortState(priority: Priority) {
+        viewModelScope.launch(dispatcher.io) {
+            dataStoreRepository.persistSortState(priority)
+        }
+    }
+
+    val lowPriorityTasksOrderList: StateFlow<List<ToDoTask>> = repository.sortByLowPriority()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            emptyList()
+        )
+
+    val highPriorityTasksOrderList: StateFlow<List<ToDoTask>> = repository.sortByHighPriority()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            emptyList()
+        )
+
+    val lowPriorityTasksToHighSearch = mutableStateListOf<ToDoTask>()
+
+    val highPriorityTasksToLowSearch = mutableStateListOf<ToDoTask>()
+
+    val nonePriorityTasksSearch = mutableStateListOf<ToDoTask>()
 
     fun upSertTask(task: ToDoTask) {
         viewModelScope.launch(dispatcher.io) {
@@ -103,16 +151,30 @@ class SharedViewModel @Inject constructor(
             repository.deleteSelectedTasks(tasksId = selectedTasks.toIntArray())
             selectedTasks.clear()
         }
-//        Log.d("DBGViewModel", "deleteMultipleTasks function.")
     }
 
     fun searchDatabase(query: String) {
         Log.d("DBGViewModel", "searchDatabase function. $query")
-
         viewModelScope.launch(dispatcher.io) {
-            repository.searchDatabase(query).collect() {
-                taskList.clear()
-                taskList.addAll(it.toMutableStateList())
+            when(mPriority.value) {
+                Priority.HIGH -> {
+                    repository.searchDatabaseHighPriorityOrder(query).collect() {
+                        highPriorityTasksToLowSearch.clear()
+                        highPriorityTasksToLowSearch.addAll(it)
+                    }
+                }
+                Priority.LOW -> {
+                    repository.searchDatabaseLowPriorityOrder(query).collect() {
+                        lowPriorityTasksToHighSearch.clear()
+                        lowPriorityTasksToHighSearch.addAll(it)
+                    }
+                }
+                else -> {
+                    repository.searchDatabaseNonePriorityOrder(query).collect() {
+                        nonePriorityTasksSearch.clear()
+                        nonePriorityTasksSearch.addAll(it)
+                    }
+                }
             }
         }
     }
@@ -151,11 +213,10 @@ class SharedViewModel @Inject constructor(
         upsertTaskId.value = 0
     }
 
-    fun cleanSearchBarAndGetAllTasks() {
+    fun cleanSearchBar() {
         if (searchAppBarState.value == SearchAppBarState.OPENED) {
             searchTextState.value = ""
             searchAppBarState.value = SearchAppBarState.CLOSED
-            getAllTasks()
         }
     }
 }
