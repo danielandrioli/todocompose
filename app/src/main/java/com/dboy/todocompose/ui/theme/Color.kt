@@ -20,11 +20,12 @@ val IlluminatingEmerald = Color(0xFF428F77)
 val lightGray = Color(0xFFD8D0D0)
 
 
-
 val HighPriorityColor = Color(0xFFBE180B)
 val MediumPriorityColor = Color(0xFFDA9203)
 val LowPriorityColor = Color(0xFF72ADA8)
-val NoPriorityColor = Color(0xFFFFFFFF)
+val NoPriorityColor = lightGray
+
+
 
 val Colors.taskItemTextColor: Color
     @Composable
@@ -53,3 +54,7 @@ val Colors.deleteButton: Color
 val Colors.cancelButton: Color
     @Composable
     get() = if (!isSystemInDarkTheme()) Color(0xFFD6D8DD) else  Color(0xFF353639)
+
+val Colors.CheckPriority: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.Green else Color(0xFF194B1B)

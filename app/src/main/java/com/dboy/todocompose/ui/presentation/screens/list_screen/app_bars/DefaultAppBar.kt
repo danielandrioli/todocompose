@@ -17,7 +17,8 @@ import com.dboy.todocompose.ui.theme.topAppBarContentColor
 @Composable
 fun DefaultAppBar(
     onSearchClicked: () -> Unit,
-    onSortClicked: (Priority) -> Unit
+    onSortClicked: (Priority) -> Unit,
+    selectedPriorityOrder: Priority
 ) {
     TopAppBar(
         title = {
@@ -27,17 +28,18 @@ fun DefaultAppBar(
             )
         }, backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
-            DefaultAppBarActions(onSearchClicked, onSortClicked)
+            DefaultAppBarActions(onSearchClicked, onSortClicked, selectedPriorityOrder)
         })
 }
 
 @Composable
 fun DefaultAppBarActions(
     onSearchClicked: () -> Unit,
-    onSortClicked: (Priority) -> Unit
+    onSortClicked: (Priority) -> Unit,
+    selectedPriorityOrder: Priority
 ) {
     SearchAction(onSearchClicked = onSearchClicked)
-    SortAction(onSortClicked = onSortClicked)
+    SortAction(onSortClicked = onSortClicked, selectedPriorityOrder = selectedPriorityOrder)
 }
 
 @Composable
@@ -55,7 +57,8 @@ fun SearchAction(
 
 @Composable
 fun SortAction(
-    onSortClicked: (Priority) -> Unit
+    onSortClicked: (Priority) -> Unit,
+    selectedPriorityOrder: Priority
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -75,19 +78,19 @@ fun SortAction(
                 onSortClicked(Priority.LOW)
                 expanded = false
             }) {
-                PriorityItem(priority = Priority.LOW)
+                PriorityItem(priority = Priority.LOW, isSelected = Priority.LOW == selectedPriorityOrder)
             }
             DropdownMenuItem(onClick = {
                 onSortClicked(Priority.HIGH)
                 expanded = false
             }) {
-                PriorityItem(priority = Priority.HIGH)
+                PriorityItem(priority = Priority.HIGH, isSelected = Priority.HIGH == selectedPriorityOrder)
             }
             DropdownMenuItem(onClick = {
                 onSortClicked(Priority.NONE)
                 expanded = false
             }) {
-                PriorityItem(priority = Priority.NONE)
+                PriorityItem(priority = Priority.NONE, isSelected = Priority.NONE == selectedPriorityOrder)
             }
         }
     }

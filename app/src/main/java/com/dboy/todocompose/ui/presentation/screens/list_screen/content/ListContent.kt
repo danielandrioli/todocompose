@@ -33,14 +33,6 @@ fun ListContent(
     val selectedTasks = viewModel.selectedTasks
 //    Log.i("DBGListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
 
-//    val taskList = if (sortState is RequestState.Success){
-//        when(priority) {
-//            Priority.LOW -> lowPriorityTasks
-//            Priority.HIGH -> highPriorityTasks
-//            else -> {viewModel.taskList.toList()}
-//        }
-//    } else viewModel.taskList.toList()
-
     val taskList = when (sortState) {
         is RequestState.Success -> {
             if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty())  {

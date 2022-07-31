@@ -31,6 +31,7 @@ fun ListScreen(
     endActivity: () -> Unit
 ) {
     val allTasksState by viewModel.taskRequisitionState.collectAsState()
+    val selectedPriorityOrder by viewModel.mPriority.collectAsState()
     val modalBottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
@@ -60,7 +61,8 @@ fun ListScreen(
                     scope.launch {
                         modalBottomSheetState.show()
                     }
-                })
+                },
+                selectedPriorityOrder = selectedPriorityOrder)
             }) {
             ListContent(allTasksState, navController, viewModel)
         }
