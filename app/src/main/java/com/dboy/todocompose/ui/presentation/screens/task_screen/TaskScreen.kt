@@ -68,7 +68,8 @@ fun TaskScreen(
                                     .show()
                             } else if (taskId != -1) {
                                 val currentTask = viewModel.getCurrentTask()
-                                viewModel.upSertTask(currentTask)
+                                viewModel.compareAndSaveIfModified(currentTask)
+//                                viewModel.upSertTask(currentTask)
                             }
                             viewModel.cleanSearchBar()
                             navController.popBackStack()
@@ -103,12 +104,14 @@ fun TaskScreen(
                                     navController.popBackStack()
                                 } else {
                                     val currentTask = viewModel.getCurrentTask()
-                                    viewModel.upSertTask(currentTask)
-                                    Toast.makeText(
-                                        context,
-                                        toastStringTaskSaved,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+//                                    viewModel.upSertTask(currentTask)
+                                    if (viewModel.compareAndSaveIfModified(currentTask)) {
+                                        Toast.makeText(
+                                            context,
+                                            toastStringTaskSaved,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
                             }
                         }
@@ -149,7 +152,8 @@ fun TaskScreen(
                 Toast.makeText(context, toastStringTaskDeleted, Toast.LENGTH_SHORT).show()
             } else if (taskId != -1) {
                 val currentTask = viewModel.getCurrentTask()
-                viewModel.upSertTask(currentTask)
+                viewModel.compareAndSaveIfModified(currentTask)
+//                viewModel.upSertTask(currentTask)
             }
             viewModel.cleanSearchBar()
             navController.popBackStack()

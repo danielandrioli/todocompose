@@ -87,6 +87,7 @@ fun TaskItem(
                 Text(
                     modifier = Modifier.alpha(0.5f),
                     text = DateFormater.getTimeStampAsString(toDoTask.timeStamp),
+//                    text = toDoTask.timeStamp.toString(),
                     color = MaterialTheme.colors.taskItemTextColor,
                     style = MaterialTheme.typography.subtitle2.copy(fontSize = 12.sp),
                     maxLines = 1,

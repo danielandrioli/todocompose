@@ -13,6 +13,7 @@ val Teal200 = Color(0xFF03DAC5)
 
 val SelectedTaskColor = Color(0xA103DAC5)
 val Indigo = Color(0xFF303F9F)
+val IndigoDark = Color(0xFF263598)
 val IndigoOutro = Color(0xFF3F51B5)
 val SecondaryGrey = Color(0xFFC5CAE9)
 
@@ -29,7 +30,7 @@ val lightGray = Color(0xFFD8D0D0)
 
 val HighPriorityColor = Color(0xFFBE180B)
 val MediumPriorityColor = Color(0xFFDA9203)
-val LowPriorityColor = Color(0xFF72ADA8)
+val LowPriorityColor = Color(0xFF8C9AE5)
 val NoPriorityColor = lightGray
 
 

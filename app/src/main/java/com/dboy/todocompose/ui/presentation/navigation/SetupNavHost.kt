@@ -43,6 +43,7 @@ fun SetupNavHost(
             Log.i("DBGTaskNavHost", "taskArgument: $taskArgument")
             taskArgument?.let { taskId ->
                 viewModel.getSingleTaskFromDb(taskId)
+                viewModel.openedTask = viewModel.task.value
 
                 val taskState = viewModel.task.collectAsState()
                 LaunchedEffect(key1 = taskState) {//como esse bloco depende do taskState, ele deve ser a key.

@@ -42,6 +42,8 @@ class SharedViewModel @Inject constructor(
     val upsertTaskDescription = mutableStateOf("")
     val upsertTaskPriority = mutableStateOf(Priority.LOW)
 
+    var openedTask: ToDoTask? = null
+
     init {
         getAllTasks()
         readSortState()
@@ -144,6 +146,14 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch(dispatcher.io) {
             repository.upSertTask(task)
         }
+    }
+
+    fun compareAndSaveIfModified(task: ToDoTask): Boolean {
+        return if (task.copy(timeStamp = 0) != openedTask?.copy(timeStamp = 0)) {
+            Log.i("DBGviewModel", "foi modificado e será salvo!")
+            upSertTask(task)
+            true
+        } else false
     }
 
     fun deleteMultipleSelectedTasks() {
