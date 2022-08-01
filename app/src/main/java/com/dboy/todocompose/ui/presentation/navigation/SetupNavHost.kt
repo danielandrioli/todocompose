@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.dboy.todocompose.ui.presentation.screens.list_screen.ListScreen
+import com.dboy.todocompose.ui.presentation.screens.splash_screen.SplashScreen
 import com.dboy.todocompose.ui.presentation.screens.task_screen.TaskScreen
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 
@@ -19,7 +20,13 @@ fun SetupNavHost(
     viewModel: SharedViewModel,
     endActivity: () -> Unit
 ) {
-    NavHost(navController = navController, startDestination = Screen.List.route) {
+    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+        composable(
+            route = Screen.Splash.route,
+        ) {
+            SplashScreen(navController)
+        }
+
         composable(
             route = Screen.List.route,
         ) {

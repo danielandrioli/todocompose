@@ -58,3 +58,7 @@ val Colors.cancelButton: Color
 val Colors.CheckPriority: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color.Green else Color(0xFF194B1B)
+
+val Colors.SplashScreenBackground: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) background else Purple700

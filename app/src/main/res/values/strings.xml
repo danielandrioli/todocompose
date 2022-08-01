@@ -19,6 +19,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="check">Check</string>
+    <string name="app_logo">App logo</string>
     <string name="selected_task">selected task</string>
     <string name="selected_tasks">selected tasks</string>
     <string name="delete_selected_task">Delete selected task?</string>
