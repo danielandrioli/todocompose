@@ -47,7 +47,7 @@ fun TaskItem(
                 Screen.Task.goToTaskScreen(navController, toDoTask.id)
             } else selectTask(toDoTask.id)
     }),
-        color = if (isTaskSelected) SelectedColor else MaterialTheme.colors.taskItemBackgroundColor,
+        color = if (isTaskSelected) SelectedTaskColor else MaterialTheme.colors.taskItemBackgroundColor,
         shape = RectangleShape,
         elevation = TASK_ITEM_ELEVATION,
         ) {

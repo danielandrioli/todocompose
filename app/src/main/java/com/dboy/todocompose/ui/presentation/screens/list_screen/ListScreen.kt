@@ -91,7 +91,7 @@ fun ListScreen(
 @Composable
 fun ListFab(navController: NavHostController, viewModel: SharedViewModel) {
     FloatingActionButton(onClick = {
-        createTasksForTest(viewModel)
+//        createTasksForTest(viewModel)
         Screen.Task.goToTaskScreen(navController, -1)
     }) {
         Icon(

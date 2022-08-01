@@ -9,13 +9,20 @@ val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
-val SelectedColor = Color(0xA103DAC5)
 
+
+val SelectedTaskColor = Color(0xA103DAC5)
+val Indigo = Color(0xFF303F9F)
+val IndigoOutro = Color(0xFF3F51B5)
+val SecondaryGrey = Color(0xFFC5CAE9)
+
+
+val EerieBlack = Color(0xFF151719)
+val AnotherBlack = Color(0xFF232629)
+val SonicSilver = Color(0xFF707070)
 
 val Charcoal = Color(0xFF41515A)
-val SonicSilver = Color(0xFF707070)
 val DavysGrey = Color(0xFF535555)
-val EerieBlack = Color(0xFF151719)
 val IlluminatingEmerald = Color(0xFF428F77)
 val lightGray = Color(0xFFD8D0D0)
 
@@ -41,11 +48,11 @@ val Colors.taskItemBackgroundColor: Color
 
 val Colors.topAppBarContentColor: Color
     @Composable
-    get() = if (!isSystemInDarkTheme()) Color.White else lightGray
+    get() = if (isSystemInDarkTheme()) lightGray else Color.White
 
 val Colors.topAppBarBackgroundColor: Color
     @Composable
-    get() = if (!isSystemInDarkTheme()) SonicSilver else Color.Black
+    get() = if (!isSystemInDarkTheme()) Indigo else Color.Black
 
 val Colors.deleteButton: Color
     @Composable
@@ -61,4 +68,4 @@ val Colors.CheckPriority: Color
 
 val Colors.SplashScreenBackground: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) background else Purple700
+    get() = if (isSystemInDarkTheme()) background else Indigo
