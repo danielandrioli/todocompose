@@ -5,12 +5,6 @@ import androidx.compose.material.Colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
-
-
 val SelectedTaskColor = Color(0xA103DAC5)
 val Indigo = Color(0xFF303F9F)
 val IndigoDark = Color(0xFF263598)
@@ -22,9 +16,6 @@ val EerieBlack = Color(0xFF151719)
 val AnotherBlack = Color(0xFF232629)
 val SonicSilver = Color(0xFF707070)
 
-val Charcoal = Color(0xFF41515A)
-val DavysGrey = Color(0xFF535555)
-val IlluminatingEmerald = Color(0xFF428F77)
 val lightGray = Color(0xFFD8D0D0)
 
 

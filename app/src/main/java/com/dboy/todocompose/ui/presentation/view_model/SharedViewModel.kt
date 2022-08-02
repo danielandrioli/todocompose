@@ -41,6 +41,9 @@ class SharedViewModel @Inject constructor(
     val upsertTaskTitle = mutableStateOf("")
     val upsertTaskDescription = mutableStateOf("")
     val upsertTaskPriority = mutableStateOf(Priority.LOW)
+    private val _searchRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
+    val searchRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
+
 
     var openedTask: ToDoTask? = null
 
@@ -136,25 +139,28 @@ class SharedViewModel @Inject constructor(
     val nonePriorityTasksSearch = mutableStateListOf<ToDoTask>()
 
     fun searchDatabase(query: String) {
-        Log.d("DBGViewModel", "searchDatabase function. $query")
+        _searchRequestState.value = RequestState.Loading
         viewModelScope.launch(dispatcher.io) {
             when (mPriority.value) {
                 Priority.HIGH -> {
                     repository.searchDatabaseHighPriorityOrder(query).collect() {
                         highPriorityTasksToLowSearch.clear()
                         highPriorityTasksToLowSearch.addAll(it)
+                        _searchRequestState.value = RequestState.Success
                     }
                 }
                 Priority.LOW -> {
                     repository.searchDatabaseLowPriorityOrder(query).collect() {
                         lowPriorityTasksToHighSearch.clear()
                         lowPriorityTasksToHighSearch.addAll(it)
+                        _searchRequestState.value = RequestState.Success
                     }
                 }
                 else -> {
                     repository.searchDatabaseNonePriorityOrder(query).collect() {
                         nonePriorityTasksSearch.clear()
                         nonePriorityTasksSearch.addAll(it)
+                        _searchRequestState.value = RequestState.Success
                     }
                 }
             }

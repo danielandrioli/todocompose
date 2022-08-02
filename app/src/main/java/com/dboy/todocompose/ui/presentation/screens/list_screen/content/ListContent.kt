@@ -22,6 +22,7 @@ fun ListContent(
     viewModel: SharedViewModel
 ) {
     val sortState by viewModel.sortRequestState.collectAsState()
+    val searchState by viewModel.searchRequestState.collectAsState()
     val priority by viewModel.mPriority.collectAsState()
     val lowPriorityTasks by viewModel.lowPriorityTasksOrderList.collectAsState()
     val highPriorityTasks by viewModel.highPriorityTasksOrderList.collectAsState()
@@ -60,7 +61,7 @@ fun ListContent(
     when (taskListState) {
         is RequestState.Success -> {
             if (taskList.isEmpty()) {
-                if (viewModel.searchTextState.value.isNotEmpty()) {
+                if (viewModel.searchTextState.value.isNotEmpty() && searchState != RequestState.Loading) { //to avoid showing the image when loading a search...
                     EmptyContent(
                         emptyContentText = stringResource(id = R.string.no_results_found),
                         contentDescription = stringResource(id = R.string.neutral_face_icon),

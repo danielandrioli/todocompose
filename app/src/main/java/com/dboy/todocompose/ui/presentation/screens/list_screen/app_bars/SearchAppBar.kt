@@ -46,7 +46,7 @@ fun SearchAppbar(
             onValueChange = onTextChange,
             placeholder = {
                 Text(
-                    modifier = Modifier.alpha(0.5f),
+                    modifier = Modifier.alpha(0.6f),
                     text = stringResource(id = R.string.search_placeholder)
                 )
             },

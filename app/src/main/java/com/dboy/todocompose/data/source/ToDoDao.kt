@@ -25,33 +25,33 @@ interface ToDoDao {
     suspend fun deleteTasks(vararg tasksId: Int)
 
     @Query("SELECT * FROM todo_table WHERE title LIKE '%' || :searchQuery || '%' " +
-                "OR description LIKE '%' || :searchQuery || '%'"
+                "OR description LIKE '%' || :searchQuery || '%' ORDER BY timeStamp DESC"
     )
     fun searchDatabaseNonePriorityOrder(searchQuery: String): Flow<List<ToDoTask>>
 
     @Query(
         "SELECT * FROM todo_table WHERE title LIKE '%' || :searchQuery || '%' " +
                 "OR description LIKE '%' || :searchQuery || '%' ORDER BY CASE WHEN priority " +
-                "LIKE 'L%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END"
+                "LIKE 'L%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END, timeStamp DESC"
     )
     fun searchDatabaseLowPriorityOrder(searchQuery: String): Flow<List<ToDoTask>>
 
     @Query(
         "SELECT * FROM todo_table WHERE title LIKE '%' || :searchQuery || '%' " +
                 "OR description LIKE '%' || :searchQuery || '%' ORDER BY CASE WHEN priority LIKE 'H%' " +
-                "THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END"
+                "THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END, timeStamp DESC"
     )
     fun searchDatabaseHighPriorityOrder(searchQuery: String): Flow<List<ToDoTask>>
 
     @Query(
         "SELECT * FROM todo_table ORDER BY CASE WHEN priority LIKE 'L%' " +
-                "THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END"
+                "THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END, timeStamp DESC"
     )
     fun sortByLowPriority(): Flow<List<ToDoTask>>
 
     @Query(
         "SELECT * FROM todo_table ORDER BY CASE WHEN priority LIKE 'H%' " +
-                "THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END"
+                "THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END, timeStamp DESC"
     )
     fun sortByHighPriority(): Flow<List<ToDoTask>>
 }

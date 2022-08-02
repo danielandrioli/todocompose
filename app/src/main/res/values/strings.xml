@@ -2,7 +2,7 @@
     <string name="app_name">To Do Compose</string>
     <string name="fab_add_button">Add new task</string>
     <string name="default_bar_title">Tasks</string>
-    <string name="search_placeholder">Search for a task</string>
+    <string name="search_placeholder">Search for a task...</string>
     <string name="close_action">Close</string>
     <string name="no_results_found">No results found. </string>
     <string name="empty_list">Your to-do list is empty. </string>
