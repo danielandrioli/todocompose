@@ -20,7 +20,11 @@ fun SelectTasksAppBar(
     TopAppBar(
         title = {
             Text(
-                text = "$selectedTasksQuantity " + stringResource(id = selectedTasksString(selectedTasksQuantity)),
+                text = "$selectedTasksQuantity " + stringResource(
+                    id = selectedTasksString(
+                        selectedTasksQuantity
+                    )
+                ),
                 color = MaterialTheme.colors.topAppBarContentColor
             )
         }, backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,

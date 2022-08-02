@@ -1,6 +1,5 @@
 package com.dboy.todocompose.ui.presentation.screens.task_screen.content
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -46,7 +45,9 @@ fun UpsertTaskContent(
             .padding(LARGE_PADDING)
     ) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().clearFocusOnKeyboardDismiss(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clearFocusOnKeyboardDismiss(),
             interactionSource = interactionSource,
             value = taskTitle,
             onValueChange = onTitleChange,
@@ -62,7 +63,8 @@ fun UpsertTaskContent(
 
         OutlinedTextField(
             modifier = Modifier
-                .fillMaxSize().clearFocusOnKeyboardDismiss(),
+                .fillMaxSize()
+                .clearFocusOnKeyboardDismiss(),
             interactionSource = interactionSource,
             value = taskDescription,
             onValueChange = onDescriptionChange,

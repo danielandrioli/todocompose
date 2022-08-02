@@ -37,20 +37,23 @@ fun TaskItem(
     selectTask: (Int) -> Unit
 ) {
     Log.i("ListContent", "TaskItem: ${toDoTask.id} - isTaskSelected: $isTaskSelected")
-    Surface(modifier = Modifier.fillMaxWidth().combinedClickable(
-        onClick = {
-            if (isSelectModeOn) {
-                selectTask(toDoTask.id)
-            } else Screen.Task.goToTaskScreen(navController, toDoTask.id)
-        }, onLongClick = {
-            if (searchAppBarState == SearchAppBarState.OPENED) {
-                Screen.Task.goToTaskScreen(navController, toDoTask.id)
-            } else selectTask(toDoTask.id)
-    }),
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {
+                    if (isSelectModeOn) {
+                        selectTask(toDoTask.id)
+                    } else Screen.Task.goToTaskScreen(navController, toDoTask.id)
+                }, onLongClick = {
+                    if (searchAppBarState == SearchAppBarState.OPENED) {
+                        Screen.Task.goToTaskScreen(navController, toDoTask.id)
+                    } else selectTask(toDoTask.id)
+                }),
         color = if (isTaskSelected) SelectedTaskColor else MaterialTheme.colors.taskItemBackgroundColor,
         shape = RectangleShape,
         elevation = TASK_ITEM_ELEVATION,
-        ) {
+    ) {
         Column(
             modifier = Modifier
                 .padding(LARGE_PADDING)
@@ -110,7 +113,13 @@ fun TaskItemPreview() {
         priority = Priority.MEDIUM,
         timeStamp = 0L
     )
-    TaskItem(toDoTask = task, navController = navController, false, false,SearchAppBarState.OPENED) {
+    TaskItem(
+        toDoTask = task,
+        navController = navController,
+        false,
+        false,
+        SearchAppBarState.OPENED
+    ) {
 
     }
 }

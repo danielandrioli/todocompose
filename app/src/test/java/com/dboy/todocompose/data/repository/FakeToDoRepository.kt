@@ -36,7 +36,6 @@ class FakeToDoRepository : ToDoRepository {
             it.id == taskId
         }
         println("lista: $listOfTasks")
-
     }
 
     override suspend fun deleteSelectedTasks(vararg tasksId: Int) {
@@ -63,14 +62,6 @@ class FakeToDoRepository : ToDoRepository {
     }
 
     override fun sortByHighPriority(): Flow<List<ToDoTask>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun sortByDateStartingFromOlder(): Flow<List<ToDoTask>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun sortByDateStartingFromLatest(): Flow<List<ToDoTask>> {
         TODO("Not yet implemented")
     }
 }

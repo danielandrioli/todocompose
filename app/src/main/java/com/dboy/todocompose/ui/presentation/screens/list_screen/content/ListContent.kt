@@ -31,21 +31,22 @@ fun ListContent(
     val nonePriorityTasksSearch = viewModel.nonePriorityTasksSearch
 
     val selectedTasks = viewModel.selectedTasks
-//    Log.i("DBGListContent", "${selectedTasks.toList()}, SelectMode: ${viewModel.selectMode.value}")
 
     val taskList = when (sortState) {
         is RequestState.Success -> {
-            if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty())  {
-                when(priority) {
+            if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty()) {
+                when (priority) {
                     Priority.LOW -> lowPriorityTasksSearch
                     Priority.HIGH -> highPriorityTasksSearch
                     else -> nonePriorityTasksSearch
                 }
             } else {
-                when(priority) {
+                when (priority) {
                     Priority.LOW -> lowPriorityTasks
                     Priority.HIGH -> highPriorityTasks
-                    else -> {nonePriorityTasks}
+                    else -> {
+                        nonePriorityTasks
+                    }
                 }
             }
         }
@@ -58,8 +59,6 @@ fun ListContent(
 
     when (taskListState) {
         is RequestState.Success -> {
-//            val taskList = viewModel.taskList
-
             if (taskList.isEmpty()) {
                 if (viewModel.searchTextState.value.isNotEmpty()) {
                     EmptyContent(
@@ -98,15 +97,13 @@ fun ListContent(
                 }
             }
         }
-        is RequestState.Loading -> Log.i("DBGListContent", "Loading") //CRIAR AQUI UMA TELA DE LOADING
         is RequestState.Error -> {
             EmptyContent(
                 emptyContentText = stringResource(id = R.string.error_message),
                 contentDescription = stringResource(id = R.string.sad_face_icon),
                 painterResource = R.drawable.ic_sentiment_dissatisfied
             )
-            Log.i("DBGListContent", "Error")
         }
-        is RequestState.Idle -> Log.i("DBGListContent", "Idle") //MUDAR
+        is RequestState.Idle -> Log.i("DBGListContent", "Idle")
     }
 }

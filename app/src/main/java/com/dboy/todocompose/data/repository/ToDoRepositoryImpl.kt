@@ -28,8 +28,4 @@ class ToDoRepositoryImpl(private val dao: ToDoDao) : ToDoRepository {
     override fun sortByLowPriority(): Flow<List<ToDoTask>> = dao.sortByLowPriority()
 
     override fun sortByHighPriority(): Flow<List<ToDoTask>> = dao.sortByHighPriority()
-
-    override fun sortByDateStartingFromOlder(): Flow<List<ToDoTask>> = dao.sortByDateStartingFromOlder()
-
-    override fun sortByDateStartingFromLatest(): Flow<List<ToDoTask>> = dao.sortByDateStartingFromLatest()
 }

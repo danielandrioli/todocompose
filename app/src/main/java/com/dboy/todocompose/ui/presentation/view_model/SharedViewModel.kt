@@ -44,17 +44,23 @@ class SharedViewModel @Inject constructor(
 
     var openedTask: ToDoTask? = null
 
+    private val _priority = MutableStateFlow<Priority>(Priority.NONE)
+    val mPriority: StateFlow<Priority> = _priority
+    private val _sortRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
+    val sortRequestState: StateFlow<RequestState> = _sortRequestState
+
+    fun persistSortState(priority: Priority) {
+        viewModelScope.launch(dispatcher.io) {
+            dataStoreRepository.persistSortState(priority)
+        }
+    }
+
     init {
         getAllTasks()
         readSortState()
     }
-    /*
-    New problem: when the user makes a search and opens the task, then goes back to the ListScreen, the list gets updated
-    with all the tasks (not just the search). I don't know why this happens.
-     */
 
     fun getAllTasks() {
-        taskRequisitionState.value = RequestState.Loading  //at this point of the project, the request state is kind useless...
         viewModelScope.launch(dispatcher.io) {
             try {
                 repository.getAllTasks().collect {
@@ -106,19 +112,8 @@ class SharedViewModel @Inject constructor(
                     }
             } catch (e: Exception) {
                 _sortRequestState.value = RequestState.Error(e)
-                Log.d("DBGViewModel", "error | sort state: ${e.localizedMessage}")
+//                Log.d("DBGViewModel", "error | sort state: ${e.localizedMessage}")
             }
-        }
-    }
-
-    private val _priority = MutableStateFlow<Priority>(Priority.NONE)
-    val mPriority: StateFlow<Priority> = _priority
-    private val _sortRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
-    val sortRequestState: StateFlow<RequestState> = _sortRequestState
-
-    fun persistSortState(priority: Priority) {
-        viewModelScope.launch(dispatcher.io) {
-            dataStoreRepository.persistSortState(priority)
         }
     }
 
@@ -137,36 +132,13 @@ class SharedViewModel @Inject constructor(
         )
 
     val lowPriorityTasksToHighSearch = mutableStateListOf<ToDoTask>()
-
     val highPriorityTasksToLowSearch = mutableStateListOf<ToDoTask>()
-
     val nonePriorityTasksSearch = mutableStateListOf<ToDoTask>()
-
-    fun upSertTask(task: ToDoTask) {
-        viewModelScope.launch(dispatcher.io) {
-            repository.upSertTask(task)
-        }
-    }
-
-    fun compareAndSaveIfModified(task: ToDoTask): Boolean {
-        return if (task.copy(timeStamp = 0) != openedTask?.copy(timeStamp = 0)) {
-            Log.i("DBGviewModel", "foi modificado e será salvo!")
-            upSertTask(task)
-            true
-        } else false
-    }
-
-    fun deleteMultipleSelectedTasks() {
-        viewModelScope.launch(dispatcher.io) {
-            repository.deleteSelectedTasks(tasksId = selectedTasks.toIntArray())
-            selectedTasks.clear()
-        }
-    }
 
     fun searchDatabase(query: String) {
         Log.d("DBGViewModel", "searchDatabase function. $query")
         viewModelScope.launch(dispatcher.io) {
-            when(mPriority.value) {
+            when (mPriority.value) {
                 Priority.HIGH -> {
                     repository.searchDatabaseHighPriorityOrder(query).collect() {
                         highPriorityTasksToLowSearch.clear()
@@ -186,6 +158,27 @@ class SharedViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun upSertTask(task: ToDoTask) {
+        viewModelScope.launch(dispatcher.io) {
+            repository.upSertTask(task)
+        }
+    }
+
+    fun compareAndSaveIfModified(task: ToDoTask): Boolean {
+        return if (task.copy(timeStamp = 0) != openedTask?.copy(timeStamp = 0)) {
+            Log.i("DBGviewModel", "foi modificado e será salvo!")
+            upSertTask(task)
+            true
+        } else false
+    }
+
+    fun deleteMultipleSelectedTasks() {
+        viewModelScope.launch(dispatcher.io) {
+            repository.deleteSelectedTasks(tasksId = selectedTasks.toIntArray())
+            selectedTasks.clear()
         }
     }
 

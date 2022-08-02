@@ -4,8 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -42,8 +44,11 @@ fun ListScreen(
     DeleteTaskBottomSheet(
         sheetState = modalBottomSheetState,
         scope = scope,
-        sheetText = if (viewModel.selectedTasks.size > 1) stringResource(id = R.string.delete_multiple_selected_tasks, viewModel.selectedTasks.size)
-            else stringResource(id = R.string.delete_selected_task),
+        sheetText = if (viewModel.selectedTasks.size > 1) stringResource(
+            id = R.string.delete_multiple_selected_tasks,
+            viewModel.selectedTasks.size
+        )
+        else stringResource(id = R.string.delete_selected_task),
         onConfirmDeletionClick = {
             viewModel.deleteMultipleSelectedTasks()
             viewModel.selectMode.value = false
@@ -57,12 +62,14 @@ fun ListScreen(
                     ListFab(navController = navController, viewModel)
                 }
             }, topBar = {
-                ListAppBar(viewModel, onDeleteTasks = {
-                    scope.launch {
-                        modalBottomSheetState.show()
-                    }
-                },
-                selectedPriorityOrder = selectedPriorityOrder)
+                ListAppBar(
+                    viewModel, onDeleteTasks = {
+                        scope.launch {
+                            modalBottomSheetState.show()
+                        }
+                    },
+                    selectedPriorityOrder = selectedPriorityOrder
+                )
             }) {
             ListContent(allTasksState, navController, viewModel)
         }

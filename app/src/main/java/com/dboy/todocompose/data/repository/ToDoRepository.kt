@@ -15,6 +15,4 @@ interface ToDoRepository {
     fun searchDatabaseHighPriorityOrder(searchQuery: String) : Flow<List<ToDoTask>>
     fun sortByLowPriority() : Flow<List<ToDoTask>>
     fun sortByHighPriority() : Flow<List<ToDoTask>>
-    fun sortByDateStartingFromOlder() : Flow<List<ToDoTask>>
-    fun sortByDateStartingFromLatest() : Flow<List<ToDoTask>>
 }

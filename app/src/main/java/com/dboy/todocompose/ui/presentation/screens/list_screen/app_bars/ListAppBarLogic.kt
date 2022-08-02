@@ -1,11 +1,8 @@
 package com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import com.dboy.todocompose.data.models.Priority
-import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
-import com.dboy.todocompose.utils.RequestState
 import com.dboy.todocompose.utils.SearchAppBarState
 
 @Composable
@@ -27,7 +24,7 @@ fun ListAppBar(
             onSearchClicked = {
                 viewModel.searchAppBarState.value = SearchAppBarState.OPENED
             },
-            onSortClicked = {priority ->
+            onSortClicked = { priority ->
                 viewModel.persistSortState(priority)
             },
             selectedPriorityOrder = selectedPriorityOrder

@@ -16,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
 @HiltAndroidTest
@@ -76,18 +77,6 @@ class ToDoDaoTest {
     }
 
     @Test
-    fun deleteAllTasks() {
-        runTest {
-            dao.upSertTask(task)
-            dao.upSertTask(task.copy(title = "Newwww", id = 2))
-            dao.deleteAllTasks()
-
-            val allTasks = dao.getAllTasks().first()
-            assertThat(allTasks).isEmpty()
-        }
-    }
-
-    @Test
     fun searchTaskWithQuery() {
         runTest {
             dao.upSertTask(task)
@@ -129,32 +118,32 @@ class ToDoDaoTest {
     }
 
     @Test
-    fun sortByDateStartingFromFirst() {
+    fun searchListLowPriorityOrder() {
         runTest {
             val newTask = task.copy(id = 0)
 
             dao.upSertTask(newTask)
-            dao.upSertTask(newTask.copy(title = "Mah oe", timeStamp = 3L))
-            dao.upSertTask(newTask.copy(title = "Hihihi", timeStamp = 2L))
-            dao.upSertTask(newTask.copy(title = "Cabelo twonight", timeStamp = 9999L))
+            dao.upSertTask(newTask.copy(title = "Hi", timeStamp = 3L))
+            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.LOW, timeStamp = 2L)) //this should be the first
+            dao.upSertTask(newTask.copy(title = "Cabelo Hi", timeStamp = 9999L))
 
-            val taskList = dao.sortByDateStartingFromOlder().first()
+            val taskList = dao.searchDatabaseLowPriorityOrder("Hi").first()
             assertThat(taskList[0].timeStamp).isEqualTo(2L)
         }
     }
 
     @Test
-    fun sortByDateStartingFromLatest() {
+    fun searchListHighPriorityOrder() {
         runTest {
-            val newTask = task.copy(id = 0)
+            val newTask = task.copy(id = 0, priority = Priority.LOW, title = "Mam...")
 
             dao.upSertTask(newTask)
-            dao.upSertTask(newTask.copy(title = "Mah oe", timeStamp = 3L))
-            dao.upSertTask(newTask.copy(title = "Hihihi", timeStamp = 2L))
-            dao.upSertTask(newTask.copy(title = "Cabelo twonight", timeStamp = 9999L))
+            dao.upSertTask(newTask.copy(title = "Mah oe", priority = Priority.HIGH, timeStamp = 3L))
+            dao.upSertTask(newTask.copy(title = "Ma", priority = Priority.LOW, timeStamp = 2L))
+            dao.upSertTask(newTask.copy(title = "Ma cabelo twonight", priority = Priority.MEDIUM, timeStamp = 9999L))
 
-            val taskList = dao.sortByDateStartingFromLatest().first()
-            assertThat(taskList[0].timeStamp).isEqualTo(9999L)
+            val taskList = dao.searchDatabaseHighPriorityOrder("Ma").first()
+            assertThat(taskList[0].timeStamp).isEqualTo(3L)
         }
     }
 }

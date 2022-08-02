@@ -2,7 +2,6 @@ package com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import com.dboy.todocompose.R
 import com.dboy.todocompose.ui.theme.TOP_APP_BAR_HEIGHT
 import com.dboy.todocompose.ui.theme.topAppBarBackgroundColor
-import com.dboy.todocompose.R
 import com.dboy.todocompose.ui.theme.topAppBarContentColor
 
 @Composable
