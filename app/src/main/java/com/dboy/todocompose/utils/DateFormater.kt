@@ -10,7 +10,7 @@ object DateFormater {
 //    }
 
     fun getTimeStampAsString(timeStamp: Long?) : String {
-        return SimpleDateFormat.getDateInstance().format(timeStamp) //Returning just the date. I don't want to show the hours and minutes.
+        return SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("pt", "BR")).format(timeStamp) //Returning just the date. I don't want to show the hours and minutes.
     }
 
 

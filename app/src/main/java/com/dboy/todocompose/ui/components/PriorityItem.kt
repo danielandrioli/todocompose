@@ -23,6 +23,7 @@ import com.dboy.todocompose.ui.theme.Typography
 fun PriorityItem(
     priority: Priority, modifier: Modifier = Modifier,
     priorityText: String = "",
+    displayName: String = priority.name,
     isSelected: Boolean = false
 ) {
     Row(
@@ -34,7 +35,7 @@ fun PriorityItem(
         }
         Spacer(modifier = Modifier.width(LARGE_PADDING))
         Text(
-            text = priority.name + " " + priorityText,
+            text = displayName + " " + priorityText,
             style = Typography.subtitle1,
             color = MaterialTheme.colors.onSurface
         )

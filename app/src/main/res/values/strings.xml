@@ -12,6 +12,7 @@
     <string name="title">Título</string>
     <string name="description">Descrição</string>
     <string name="priority">PRIORIDADE</string>
+    <string name="sort_by_date">DATA</string>
     <string name="task_saved">Tarefa salva!</string>
     <string name="task_deleted">Tarefa deletada!</string>
     <string name="undo_deletion">DESFAZER</string>

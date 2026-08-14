@@ -98,6 +98,7 @@ fun SortAction(
             }) {
                 PriorityItem(
                     priority = Priority.NENHUMA,
+                    displayName = stringResource(id = R.string.sort_by_date),
                     isSelected = Priority.NENHUMA == selectedPriorityOrder
                 )
             }
