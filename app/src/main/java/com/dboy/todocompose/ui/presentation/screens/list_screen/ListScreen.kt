@@ -114,7 +114,7 @@ fun createTasksForTest(viewModel: SharedViewModel) {
             ToDoTask(
                 title = "$i",
                 description = "tst",
-                priority = Priority.LOW,
+                priority = Priority.BAIXA,
                 DateFormater.getTimeStampAsLong()
             )
         )

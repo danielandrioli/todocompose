@@ -37,14 +37,14 @@ fun ListContent(
         is RequestState.Success -> {
             if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty()) {
                 when (priority) {
-                    Priority.LOW -> lowPriorityTasksSearch
-                    Priority.HIGH -> highPriorityTasksSearch
+                    Priority.BAIXA -> lowPriorityTasksSearch
+                    Priority.ALTA -> highPriorityTasksSearch
                     else -> nonePriorityTasksSearch
                 }
             } else {
                 when (priority) {
-                    Priority.LOW -> lowPriorityTasks
-                    Priority.HIGH -> highPriorityTasks
+                    Priority.BAIXA -> lowPriorityTasks
+                    Priority.ALTA -> highPriorityTasks
                     else -> {
                         nonePriorityTasks
                     }

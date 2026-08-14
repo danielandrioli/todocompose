@@ -75,30 +75,30 @@ fun SortAction(
             expanded = false
         }) {
             DropdownMenuItem(onClick = {
-                onSortClicked(Priority.LOW)
+                onSortClicked(Priority.BAIXA)
                 expanded = false
             }) {
                 PriorityItem(
-                    priority = Priority.LOW,
-                    isSelected = Priority.LOW == selectedPriorityOrder
+                    priority = Priority.BAIXA,
+                    isSelected = Priority.BAIXA == selectedPriorityOrder
                 )
             }
             DropdownMenuItem(onClick = {
-                onSortClicked(Priority.HIGH)
+                onSortClicked(Priority.ALTA)
                 expanded = false
             }) {
                 PriorityItem(
-                    priority = Priority.HIGH,
-                    isSelected = Priority.HIGH == selectedPriorityOrder
+                    priority = Priority.ALTA,
+                    isSelected = Priority.ALTA == selectedPriorityOrder
                 )
             }
             DropdownMenuItem(onClick = {
-                onSortClicked(Priority.NONE)
+                onSortClicked(Priority.NENHUMA)
                 expanded = false
             }) {
                 PriorityItem(
-                    priority = Priority.NONE,
-                    isSelected = Priority.NONE == selectedPriorityOrder
+                    priority = Priority.NENHUMA,
+                    isSelected = Priority.NENHUMA == selectedPriorityOrder
                 )
             }
         }

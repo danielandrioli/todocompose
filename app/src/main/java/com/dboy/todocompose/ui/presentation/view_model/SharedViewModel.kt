@@ -40,14 +40,14 @@ class SharedViewModel @Inject constructor(
     val upsertTaskId = mutableStateOf(0)
     val upsertTaskTitle = mutableStateOf("")
     val upsertTaskDescription = mutableStateOf("")
-    val upsertTaskPriority = mutableStateOf(Priority.LOW)
+    val upsertTaskPriority = mutableStateOf(Priority.BAIXA)
     private val _searchRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
     val searchRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
 
 
     var openedTask: ToDoTask? = null
 
-    private val _priority = MutableStateFlow<Priority>(Priority.NONE)
+    private val _priority = MutableStateFlow<Priority>(Priority.NENHUMA)
     val mPriority: StateFlow<Priority> = _priority
     private val _sortRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
     val sortRequestState: StateFlow<RequestState> = _sortRequestState
@@ -142,14 +142,14 @@ class SharedViewModel @Inject constructor(
         _searchRequestState.value = RequestState.Loading
         viewModelScope.launch(dispatcher.io) {
             when (mPriority.value) {
-                Priority.HIGH -> {
+                Priority.ALTA -> {
                     repository.searchDatabaseHighPriorityOrder(query).collect() {
                         highPriorityTasksToLowSearch.clear()
                         highPriorityTasksToLowSearch.addAll(it)
                         _searchRequestState.value = RequestState.Success
                     }
                 }
-                Priority.LOW -> {
+                Priority.BAIXA -> {
                     repository.searchDatabaseLowPriorityOrder(query).collect() {
                         lowPriorityTasksToHighSearch.clear()
                         lowPriorityTasksToHighSearch.addAll(it)
@@ -218,7 +218,7 @@ class SharedViewModel @Inject constructor(
     fun cleanCurrentTextFields() {
         upsertTaskTitle.value = ""
         upsertTaskDescription.value = ""
-        upsertTaskPriority.value = Priority.LOW
+        upsertTaskPriority.value = Priority.BAIXA
         upsertTaskId.value = 0
     }
 

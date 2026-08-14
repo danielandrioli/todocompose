@@ -76,21 +76,21 @@ fun PriorityDropDown(
             }) {
             DropdownMenuItem(onClick = {
                 expanded = false
-                onPrioritySelected(Priority.LOW)
+                onPrioritySelected(Priority.BAIXA)
             }) {
-                PriorityItem(priority = Priority.LOW)
+                PriorityItem(priority = Priority.BAIXA)
             }
             DropdownMenuItem(onClick = {
                 expanded = false
-                onPrioritySelected(Priority.MEDIUM)
+                onPrioritySelected(Priority.MEDIA)
             }) {
-                PriorityItem(priority = Priority.MEDIUM)
+                PriorityItem(priority = Priority.MEDIA)
             }
             DropdownMenuItem(onClick = {
                 expanded = false
-                onPrioritySelected(Priority.HIGH)
+                onPrioritySelected(Priority.ALTA)
             }) {
-                PriorityItem(priority = Priority.HIGH)
+                PriorityItem(priority = Priority.ALTA)
             }
         }
     }
@@ -100,6 +100,6 @@ fun PriorityDropDown(
 @Preview
 fun PreviewPriorityDropDown() {
     ToDoComposeTheme {
-        PriorityDropDown(priority = Priority.HIGH, onPrioritySelected = {})
+        PriorityDropDown(priority = Priority.ALTA, onPrioritySelected = {})
     }
 }

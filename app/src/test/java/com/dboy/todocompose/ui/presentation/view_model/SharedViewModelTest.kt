@@ -1,7 +1,6 @@
 package com.dboy.todocompose.ui.presentation.view_model
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.dboy.todocompose.UnsuccessfulRequestException
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.data.repository.DataStoreRepository
@@ -9,14 +8,9 @@ import com.dboy.todocompose.data.repository.FakeToDoRepository
 import com.dboy.todocompose.data.repository.ToDoRepository
 import com.dboy.todocompose.ui.presentation.DispatcherProvider
 import com.dboy.todocompose.ui.presentation.FakeDispatchers
-import com.dboy.todocompose.utils.RequestState
-import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
-import org.mockito.Mockito.mock
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,7 +35,7 @@ class SharedViewModelTest {
         taskExample = ToDoTask(
             title = "Testar o código",
             description = "Esse é apenas um simples teste.",
-            priority = Priority.HIGH,
+            priority = Priority.ALTA,
             timeStamp = 1010L
         )
     }

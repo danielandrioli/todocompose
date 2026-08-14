@@ -37,7 +37,7 @@ class ToDoDaoTest {
         dao = toDoDatabase.toDoDao()
         task = ToDoTask(
             "My test", "Just a simple test.",
-            Priority.HIGH, 1010L, id = 1
+            Priority.ALTA, 1010L, id = 1
         )
         /* id = 0 não dá certo para testes.
         * Acho que o id que o room começa a gerar começa a partir do 1. O valor padrão igual a 0 é para gerar automaticamente. */
@@ -94,11 +94,11 @@ class ToDoDaoTest {
 
             dao.upSertTask(newTask)
             dao.upSertTask(newTask.copy(title = "Mah oe"))
-            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.LOW))
-            dao.upSertTask(newTask.copy(title = "Cabelo twonight", priority = Priority.MEDIUM))
+            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.BAIXA))
+            dao.upSertTask(newTask.copy(title = "Cabelo twonight", priority = Priority.MEDIA))
 
             val taskList = dao.sortByLowPriority().first()
-            assertThat(taskList[0].priority).isEqualTo(Priority.LOW)
+            assertThat(taskList[0].priority).isEqualTo(Priority.BAIXA)
         }
     }
 
@@ -109,11 +109,11 @@ class ToDoDaoTest {
 
             dao.upSertTask(newTask)
             dao.upSertTask(newTask.copy(title = "Mah oe"))
-            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.LOW))
-            dao.upSertTask(newTask.copy(title = "Cabelo twonight", priority = Priority.MEDIUM))
+            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.BAIXA))
+            dao.upSertTask(newTask.copy(title = "Cabelo twonight", priority = Priority.MEDIA))
 
             val taskList = dao.sortByHighPriority().first()
-            assertThat(taskList[0].priority).isEqualTo(Priority.HIGH)
+            assertThat(taskList[0].priority).isEqualTo(Priority.ALTA)
         }
     }
 
@@ -124,7 +124,7 @@ class ToDoDaoTest {
 
             dao.upSertTask(newTask)
             dao.upSertTask(newTask.copy(title = "Hi", timeStamp = 3L))
-            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.LOW, timeStamp = 2L)) //this should be the first
+            dao.upSertTask(newTask.copy(title = "Hihihi", priority = Priority.BAIXA, timeStamp = 2L)) //this should be the first
             dao.upSertTask(newTask.copy(title = "Cabelo Hi", timeStamp = 9999L))
 
             val taskList = dao.searchDatabaseLowPriorityOrder("Hi").first()
@@ -135,12 +135,12 @@ class ToDoDaoTest {
     @Test
     fun searchListHighPriorityOrder() {
         runTest {
-            val newTask = task.copy(id = 0, priority = Priority.LOW, title = "Mam...")
+            val newTask = task.copy(id = 0, priority = Priority.BAIXA, title = "Mam...")
 
             dao.upSertTask(newTask)
-            dao.upSertTask(newTask.copy(title = "Mah oe", priority = Priority.HIGH, timeStamp = 3L))
-            dao.upSertTask(newTask.copy(title = "Ma", priority = Priority.LOW, timeStamp = 2L))
-            dao.upSertTask(newTask.copy(title = "Ma cabelo twonight", priority = Priority.MEDIUM, timeStamp = 9999L))
+            dao.upSertTask(newTask.copy(title = "Mah oe", priority = Priority.ALTA, timeStamp = 3L))
+            dao.upSertTask(newTask.copy(title = "Ma", priority = Priority.BAIXA, timeStamp = 2L))
+            dao.upSertTask(newTask.copy(title = "Ma cabelo twonight", priority = Priority.MEDIA, timeStamp = 9999L))
 
             val taskList = dao.searchDatabaseHighPriorityOrder("Ma").first()
             assertThat(taskList[0].timeStamp).isEqualTo(3L)
