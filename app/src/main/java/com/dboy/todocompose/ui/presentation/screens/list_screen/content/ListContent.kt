@@ -106,5 +106,6 @@ fun ListContent(
             )
         }
         is RequestState.Idle -> Log.i("DBGListContent", "Idle")
+        is RequestState.Loading -> Log.i("DBGListContent", "Loading")
     }
 }
