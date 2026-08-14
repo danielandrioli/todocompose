@@ -40,6 +40,7 @@
     <string name="icon_filter_list">Ordenar lista</string>
     <string name="icon_delete">Deletar</string>
     <string name="icon_done">Marcar tarefa como concluída</string>
+    <string name="icon_undone">Desfazer conclusão da tarefa</string>
     <string name="icon_edit">Editar</string>
     <string name="icon_dropdown">Mais opções</string>
     <string name="neutral_face_icon">Rosto neutro</string>

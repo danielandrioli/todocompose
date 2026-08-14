@@ -7,11 +7,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.dboy.todocompose.R
-import com.dboy.todocompose.ui.theme.taskDoneColor
 import com.dboy.todocompose.ui.theme.topAppBarContentColor
 import com.dboy.todocompose.utils.Action
 
@@ -56,11 +56,19 @@ fun DoneAction(
         onDoneClick(Action.DONE)
     }
     ) {
-        Icon(
-            imageVector = Icons.Filled.CheckCircle,
-            contentDescription = stringResource(id = R.string.icon_done),
-            tint = if (isDone) MaterialTheme.colors.taskDoneColor else MaterialTheme.colors.topAppBarContentColor
-        )
+        if (isDone) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_undo),
+                contentDescription = stringResource(id = R.string.icon_undone),
+                tint = MaterialTheme.colors.topAppBarContentColor
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Filled.Done,
+                contentDescription = stringResource(id = R.string.icon_done),
+                tint = MaterialTheme.colors.topAppBarContentColor
+            )
+        }
     }
 }
 
