@@ -16,6 +16,7 @@ import com.dboy.todocompose.utils.DateFormater
 import com.dboy.todocompose.utils.RequestState
 import com.dboy.todocompose.utils.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,6 +42,7 @@ class SharedViewModel @Inject constructor(
     val upsertTaskTitle = mutableStateOf("")
     val upsertTaskDescription = mutableStateOf("")
     val upsertTaskPriority = mutableStateOf(Priority.BAIXA)
+    val upsertTaskDone = mutableStateOf(false)
     private val _searchRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
     val searchRequestState = MutableStateFlow<RequestState>(RequestState.Idle)
 
@@ -188,8 +190,11 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+    private var getSingleTaskJob: Job? = null
+
     fun getSingleTaskFromDb(id: Int) {
-        viewModelScope.launch(dispatcher.io) {
+        getSingleTaskJob?.cancel() //senão a coleta da task anterior continua rodando e sobrescreve _task se essa task antiga for alterada ou apagada
+        getSingleTaskJob = viewModelScope.launch(dispatcher.io) {
             if (id <= 0) _task.value = null else {
                 repository.getSingleTask(id).collect() {
                     _task.value = it
@@ -204,8 +209,14 @@ class SharedViewModel @Inject constructor(
             description = upsertTaskDescription.value,
             priority = upsertTaskPriority.value,
             timeStamp = DateFormater.getTimeStampAsLong(),
-            id = upsertTaskId.value
+            id = upsertTaskId.value,
+            isDone = upsertTaskDone.value
         )
+    }
+
+    fun toggleTaskDone() {
+        upsertTaskDone.value = !upsertTaskDone.value
+        upSertTask(getCurrentTask())
     }
 
     fun updateTextFields(task: ToDoTask) {
@@ -213,6 +224,7 @@ class SharedViewModel @Inject constructor(
         upsertTaskDescription.value = task.description
         upsertTaskPriority.value = task.priority
         upsertTaskId.value = task.id
+        upsertTaskDone.value = task.isDone
     }
 
     fun cleanCurrentTextFields() {
@@ -220,6 +232,7 @@ class SharedViewModel @Inject constructor(
         upsertTaskDescription.value = ""
         upsertTaskPriority.value = Priority.BAIXA
         upsertTaskId.value = 0
+        upsertTaskDone.value = false
     }
 
     fun cleanSearchBar() {

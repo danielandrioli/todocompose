@@ -5,15 +5,19 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -65,21 +69,34 @@ fun TaskItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    modifier = Modifier.alpha(if (toDoTask.isDone) 0.5f else 1f),
                     text = toDoTask.title,
                     color = MaterialTheme.colors.taskItemTitleColor,
                     style = MaterialTheme.typography.h6,
                     fontWeight = FontWeight.Bold,
+                    textDecoration = if (toDoTask.isDone) TextDecoration.LineThrough else TextDecoration.None,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Box {
-                    Canvas(modifier = Modifier.size(PRIORITY_INDICATOR_SIZE)) {
-                        drawCircle(color = toDoTask.priority.color)
+                    if (toDoTask.isDone) {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.taskDoneColor,
+                            modifier = Modifier.size(PRIORITY_INDICATOR_SIZE)
+                        )
+                    } else {
+                        Canvas(modifier = Modifier.size(PRIORITY_INDICATOR_SIZE)) {
+                            drawCircle(color = toDoTask.priority.color)
+                        }
                     }
                 }
             }
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .alpha(if (toDoTask.isDone) 0.5f else 1f),
                 text = toDoTask.description,
                 color = MaterialTheme.colors.taskItemTextColor,
                 style = MaterialTheme.typography.subtitle1,

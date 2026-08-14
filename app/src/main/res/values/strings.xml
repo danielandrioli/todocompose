@@ -15,6 +15,9 @@
     <string name="sort_by_date">DATA</string>
     <string name="task_saved">Tarefa salva!</string>
     <string name="task_deleted">Tarefa deletada!</string>
+    <string name="task_marked_done">Tarefa concluída!</string>
+    <string name="task_marked_not_done">Tarefa reaberta!</string>
+    <string name="done_badge">Concluída</string>
     <string name="undo_deletion">DESFAZER</string>
     <string name="ask_deletion">Deletar tarefa?</string>
     <string name="delete">Deletar</string>
@@ -36,6 +39,7 @@
     <string name="icon_search">Procurar</string>
     <string name="icon_filter_list">Ordenar lista</string>
     <string name="icon_delete">Deletar</string>
+    <string name="icon_done">Marcar tarefa como concluída</string>
     <string name="icon_edit">Editar</string>
     <string name="icon_dropdown">Mais opções</string>
     <string name="neutral_face_icon">Rosto neutro</string>

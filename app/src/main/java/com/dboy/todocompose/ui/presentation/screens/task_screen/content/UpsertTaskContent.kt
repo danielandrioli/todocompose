@@ -4,18 +4,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.ui.theme.LARGE_PADDING
+import com.dboy.todocompose.ui.theme.taskDoneColor
 import com.dboy.todocompose.utils.clearFocusOnKeyboardDismiss
 
 @Composable
@@ -23,6 +30,7 @@ fun UpsertTaskContent(
     taskTitle: String,
     taskDescription: String,
     taskPriority: Priority,
+    taskDone: Boolean = false,
     onTitleChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onPriorityChange: (Priority) -> Unit,
@@ -57,6 +65,33 @@ fun UpsertTaskContent(
             textStyle = MaterialTheme.typography.body1,
             singleLine = true
         )
+
+        if (taskDone) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Surface(
+                color = MaterialTheme.colors.taskDoneColor.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(50),
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.taskDoneColor,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(id = R.string.done_badge),
+                        color = MaterialTheme.colors.taskDoneColor,
+                        style = MaterialTheme.typography.caption
+                    )
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         PriorityDropDown(priority = taskPriority, onPrioritySelected = onPriorityChange)

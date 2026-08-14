@@ -14,13 +14,13 @@ class FakeToDoRepository : ToDoRepository {
     }
 
 
-    override fun getSingleTask(id: Int): Flow<ToDoTask> {
+    override fun getSingleTask(id: Int): Flow<ToDoTask?> {
 //        val task = listOfTasks[id]
         val task = listOfTasks.filter {
             it.id == id
         }
         return flow {
-            emit(task.first())
+            emit(task.firstOrNull())
         }
     }
 

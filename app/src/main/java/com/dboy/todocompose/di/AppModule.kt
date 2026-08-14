@@ -22,7 +22,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDatabase(@ApplicationContext context: Context): ToDoDatabase =
-        Room.databaseBuilder(context, ToDoDatabase::class.java, DATABASE_NAME).build()
+        Room.databaseBuilder(context, ToDoDatabase::class.java, DATABASE_NAME)
+            .addMigrations(ToDoDatabase.MIGRATION_1_2)
+            .build()
 
     @Singleton
     @Provides

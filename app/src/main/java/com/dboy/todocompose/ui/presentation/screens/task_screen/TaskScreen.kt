@@ -38,11 +38,14 @@ fun TaskScreen(
     val upsertTaskDescription by viewModel.upsertTaskDescription
     val upsertTaskPriority: Priority by viewModel.upsertTaskPriority
     val upsertTaskId: Int by viewModel.upsertTaskId
+    val upsertTaskDone: Boolean by viewModel.upsertTaskDone
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val toastStringTaskSaved = stringResource(id = R.string.task_saved)
     val toastStringTaskDeleted = stringResource(id = R.string.task_deleted)
+    val toastStringTaskMarkedDone = stringResource(id = R.string.task_marked_done)
+    val toastStringTaskMarkedNotDone = stringResource(id = R.string.task_marked_not_done)
 
     val modalBottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -61,7 +64,10 @@ fun TaskScreen(
         Scaffold(
             topBar = {
                 TaskAppBar(
-                    taskId = taskId, editMode = editMode, taskTitle = upsertTaskTitle
+                    taskId = taskId,
+                    editMode = editMode,
+                    taskTitle = upsertTaskTitle,
+                    taskDone = upsertTaskDone
                 ) { action ->
                     when (action) {
                         Action.NO_ACTION -> {//não quero salvar se id for -1
@@ -81,6 +87,14 @@ fun TaskScreen(
                             scope.launch {
                                 modalBottomSheetState.show()
                             }
+                        }
+                        Action.DONE -> {
+                            viewModel.toggleTaskDone()
+                            Toast.makeText(
+                                context,
+                                if (viewModel.upsertTaskDone.value) toastStringTaskMarkedDone else toastStringTaskMarkedNotDone,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                         Action.UPSERT -> {
                             keyboardController?.hide()
@@ -126,6 +140,7 @@ fun TaskScreen(
                 taskTitle = upsertTaskTitle,
                 taskDescription = upsertTaskDescription,
                 taskPriority = upsertTaskPriority,
+                taskDone = upsertTaskDone,
                 onTitleChange = {
                     if (it.length <= TASK_TITLE_MAX_CHARS) {
                         viewModel.upsertTaskTitle.value = it

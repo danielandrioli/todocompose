@@ -10,12 +10,14 @@ fun TaskAppBar(
     taskId: Int,
     editMode: Boolean,
     taskTitle: String,
+    taskDone: Boolean = false,
     onActionClick: (Action) -> Unit
 ) {
     UpsertTaskAppBar(
         taskName = if (taskId == -1) stringResource(id = R.string.new_task) else taskTitle,
         onActionClick = onActionClick,
         editMode = editMode,
-        newTask = taskId == -1
+        newTask = taskId == -1,
+        isDone = taskDone
     )
 }

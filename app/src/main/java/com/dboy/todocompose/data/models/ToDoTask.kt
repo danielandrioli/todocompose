@@ -11,5 +11,6 @@ data class ToDoTask(
     val priority: Priority,
     val timeStamp: Long,
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    val id: Int = 0,
+    val isDone: Boolean = false
 )

@@ -58,6 +58,10 @@ val Colors.CheckPriority: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color.Green else Color(0xFF194B1B)
 
+val Colors.taskDoneColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF4CAF50) else Color(0xFF2E7D32)
+
 val Colors.SplashScreenBackground: Color
     @Composable
     get() = if (isSystemInDarkTheme()) background else Indigo

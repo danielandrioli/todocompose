@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ToDoRepository {
 
     fun getAllTasks() : Flow<List<ToDoTask>>
-    fun getSingleTask(id: Int) : Flow<ToDoTask>
+    fun getSingleTask(id: Int) : Flow<ToDoTask?>
     suspend fun upSertTask(task: ToDoTask)
     suspend fun deleteTask(taskId: Int)
     suspend fun deleteSelectedTasks(vararg tasksId: Int)

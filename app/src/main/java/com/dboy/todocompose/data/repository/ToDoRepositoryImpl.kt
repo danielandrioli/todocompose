@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 class ToDoRepositoryImpl(private val dao: ToDoDao) : ToDoRepository {
     override fun getAllTasks(): Flow<List<ToDoTask>> = dao.getAllTasks()
 
-    override fun getSingleTask(id: Int): Flow<ToDoTask> = dao.getSingleTask(id)
+    override fun getSingleTask(id: Int): Flow<ToDoTask?> = dao.getSingleTask(id)
 
     override suspend fun upSertTask(task: ToDoTask) = dao.upSertTask(task)
 
