@@ -5,10 +5,10 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.dboy.todocompose.R
 import com.dboy.todocompose.ui.theme.taskDoneColor
@@ -40,7 +40,7 @@ fun UpsertAction(
     }
     ) {
         Icon(
-            imageVector = Icons.Filled.Check,
+            painter = painterResource(id = R.drawable.ic_save),
             contentDescription = stringResource(id = R.string.icon_check),
             tint = MaterialTheme.colors.topAppBarContentColor
         )
