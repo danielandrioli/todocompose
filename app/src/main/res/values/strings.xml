@@ -2,6 +2,8 @@
     <string name="app_name">To Do Compose</string>
     <string name="fab_add_button">Adicionar tarefa</string>
     <string name="default_bar_title">Tarefas</string>
+    <string name="tab_a_fazer">A fazer</string>
+    <string name="tab_concluidas">Concluídas</string>
     <string name="search_placeholder">Procure por uma tarefa...</string>
     <string name="close_action">Fechar</string>
     <string name="no_results_found">Nenhum resultado encontrado. </string>

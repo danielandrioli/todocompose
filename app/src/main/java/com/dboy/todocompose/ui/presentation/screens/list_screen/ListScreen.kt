@@ -1,6 +1,7 @@
 package com.dboy.todocompose.ui.presentation.screens.list_screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -18,6 +19,7 @@ import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.components.DeleteTaskBottomSheet
 import com.dboy.todocompose.ui.presentation.navigation.Screen
 import com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars.ListAppBar
+import com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars.ListTabRow
 import com.dboy.todocompose.ui.presentation.screens.list_screen.content.ListContent
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
 import com.dboy.todocompose.ui.theme.ToDoComposeTheme
@@ -62,14 +64,20 @@ fun ListScreen(
                     ListFab(navController = navController, viewModel)
                 }
             }, topBar = {
-                ListAppBar(
-                    viewModel, onDeleteTasks = {
-                        scope.launch {
-                            modalBottomSheetState.show()
-                        }
-                    },
-                    selectedPriorityOrder = selectedPriorityOrder
-                )
+                Column {
+                    ListAppBar(
+                        viewModel, onDeleteTasks = {
+                            scope.launch {
+                                modalBottomSheetState.show()
+                            }
+                        },
+                        selectedPriorityOrder = selectedPriorityOrder
+                    )
+                    ListTabRow(
+                        selectedTab = viewModel.selectedListTab.value,
+                        onTabSelected = { viewModel.selectListTab(it) }
+                    )
+                }
             }) {
             ListContent(allTasksState, navController, viewModel)
         }

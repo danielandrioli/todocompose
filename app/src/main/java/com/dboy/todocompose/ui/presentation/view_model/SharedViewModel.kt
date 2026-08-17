@@ -13,6 +13,7 @@ import com.dboy.todocompose.data.repository.DataStoreRepository
 import com.dboy.todocompose.data.repository.ToDoRepository
 import com.dboy.todocompose.ui.presentation.DispatcherProvider
 import com.dboy.todocompose.utils.DateFormater
+import com.dboy.todocompose.utils.ListTab
 import com.dboy.todocompose.utils.RequestState
 import com.dboy.todocompose.utils.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,7 @@ class SharedViewModel @Inject constructor(
     val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
     val searchTextState: MutableState<String> = mutableStateOf("")
+    val selectedListTab: MutableState<ListTab> = mutableStateOf(ListTab.TO_DO)
     private val _task = MutableStateFlow<ToDoTask?>(null)
     val task: StateFlow<ToDoTask?> = _task
     val editMode = mutableStateOf(false)
@@ -239,6 +241,16 @@ class SharedViewModel @Inject constructor(
         if (searchAppBarState.value == SearchAppBarState.OPENED) {
             searchTextState.value = ""
             searchAppBarState.value = SearchAppBarState.CLOSED
+        }
+    }
+
+    fun selectListTab(tab: ListTab) {
+        if (selectedListTab.value == tab) return
+        selectedListTab.value = tab
+        cleanSearchBar() //fechar a busca ao trocar de aba
+        if (selectMode.value) { //cancelar seleção múltipla ao trocar de aba, já que as tarefas selecionadas podem não pertencer à aba de destino
+            selectMode.value = false
+            selectedTasks.clear()
         }
     }
 }

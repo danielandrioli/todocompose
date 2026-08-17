@@ -12,6 +12,7 @@ import com.dboy.todocompose.R
 import com.dboy.todocompose.data.models.Priority
 import com.dboy.todocompose.data.models.ToDoTask
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
+import com.dboy.todocompose.utils.ListTab
 import com.dboy.todocompose.utils.RequestState
 import com.dboy.todocompose.utils.SearchAppBarState
 
@@ -32,10 +33,11 @@ fun ListContent(
     val nonePriorityTasksSearch = viewModel.nonePriorityTasksSearch
 
     val selectedTasks = viewModel.selectedTasks
+    val selectedListTab = viewModel.selectedListTab.value
 
     val taskList = when (sortState) {
         is RequestState.Success -> {
-            if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty()) {
+            val tasksForPriority = if (viewModel.searchAppBarState.value == SearchAppBarState.OPENED && viewModel.searchTextState.value.isNotEmpty()) {
                 when (priority) {
                     Priority.BAIXA -> lowPriorityTasksSearch
                     Priority.ALTA -> highPriorityTasksSearch
@@ -50,6 +52,7 @@ fun ListContent(
                     }
                 }
             }
+            tasksForPriority.filter { it.isDone == (selectedListTab == ListTab.DONE) }
         }
         else -> {
             emptyList<ToDoTask>()
