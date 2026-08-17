@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.dboy.todocompose.ui.theme.EMPTY_LIST_ICON_SIZE
-import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.ui.theme.EduTaskTheme
 
 @Composable
 fun EmptyContent(
@@ -48,7 +48,7 @@ fun EmptyContent(
 @Preview
 @Composable
 fun PreviewEmptyContent() {
-    ToDoComposeTheme {
+    EduTaskTheme {
 //        EmptyContent()
     }
 }

@@ -22,7 +22,7 @@ import com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars.ListApp
 import com.dboy.todocompose.ui.presentation.screens.list_screen.app_bars.ListTabRow
 import com.dboy.todocompose.ui.presentation.screens.list_screen.content.ListContent
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
-import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.ui.theme.EduTaskTheme
 import com.dboy.todocompose.utils.DateFormater
 import com.dboy.todocompose.utils.SearchAppBarState
 import kotlinx.coroutines.launch
@@ -133,7 +133,7 @@ fun createTasksForTest(viewModel: SharedViewModel) {
 @Preview(showBackground = true)
 fun PreviewListScreen() {
     val navController = rememberNavController()
-    ToDoComposeTheme {
+    EduTaskTheme {
 //        ListScreen(navController = navController, action = action.name)
     }
 }

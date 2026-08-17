@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dboy.todocompose.ui.presentation.navigation.SetupNavHost
 import com.dboy.todocompose.ui.presentation.view_model.SharedViewModel
-import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.ui.theme.EduTaskTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ToDoComposeTheme {
+            EduTaskTheme {
                 val endActivity: () -> Unit = {this.finish()}
 
                 navHostController = rememberNavController()

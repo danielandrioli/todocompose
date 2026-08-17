@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import com.dboy.todocompose.R
 import com.dboy.todocompose.ui.presentation.navigation.Screen
 import com.dboy.todocompose.ui.theme.SplashScreenBackground
-import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.ui.theme.EduTaskTheme
 import com.dboy.todocompose.utils.Constants
 import kotlinx.coroutines.delay
 
@@ -79,7 +79,7 @@ fun PreviewSplashScreen() {
 @Composable
 @Preview
 fun PreviewSplashScreenWithDarkTheme() {
-    ToDoComposeTheme(darkTheme = true) {
+    EduTaskTheme(darkTheme = true) {
 //        SplashScreen()
     }
 }

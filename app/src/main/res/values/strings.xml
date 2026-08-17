@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">To Do Compose</string>
+    <string name="app_name">EduTask</string>
     <string name="fab_add_button">Adicionar tarefa</string>
     <string name="default_bar_title">Tarefas</string>
     <string name="tab_a_fazer">A fazer</string>

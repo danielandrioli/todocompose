@@ -24,7 +24,7 @@ import com.dboy.todocompose.ui.components.PriorityItem
 import com.dboy.todocompose.ui.theme.PRIORITY_DROP_DOWN_HEIGHT
 import com.dboy.todocompose.ui.theme.SMALL_PADDING
 import com.dboy.todocompose.ui.theme.Shapes
-import com.dboy.todocompose.ui.theme.ToDoComposeTheme
+import com.dboy.todocompose.ui.theme.EduTaskTheme
 
 @Composable
 fun PriorityDropDown(
@@ -99,7 +99,7 @@ fun PriorityDropDown(
 @Composable
 @Preview
 fun PreviewPriorityDropDown() {
-    ToDoComposeTheme {
+    EduTaskTheme {
         PriorityDropDown(priority = Priority.ALTA, onPrioritySelected = {})
     }
 }
